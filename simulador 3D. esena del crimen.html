@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador 3D Realista - Investigación Judicial y Cadena de Custodia</title>
+  <style>
+    :root{
+      --bg:#0b1220;--bg2:#0f172a;--panel:#101827;--panel2:#172235;--line:#30445f;--text:#e6edf7;--muted:#9db0c9;
+      --accent:#4ec1ff;--good:#22c55e;--bad:#ef4444;--warn:#f59e0b;--card:#0a1322;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:radial-gradient(circle at top,#13213d,#09111e 60%,#050a13);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+    .app{display:grid;grid-template-columns:350px 1fr 385px;gap:14px;height:100vh;padding:14px}
+    header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(9,17,30,.94);border:1px solid var(--line);border-radius:22px;padding:14px 18px;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+    h1{margin:0;font-size:18px}.subtitle{margin-top:4px;font-size:12px;color:var(--muted);line-height:1.45}.badge{white-space:nowrap;padding:8px 12px;border-radius:999px;background:#08111f;border:1px solid var(--line);color:#a8ddff;font-size:12px}
+    .panel,.sceneWrap{background:rgba(8,14,26,.92);border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 80px rgba(0,0,0,.30)}
+    .panel{padding:14px;overflow:auto}
+    .sectionTitle{margin:12px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:#c9d8ec;font-weight:700}
+    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+    select,input,textarea{width:100%;background:#07101e;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px;font:inherit}
+    textarea{min-height:90px;resize:vertical}
+    button{background:#0c1729;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:13px;cursor:pointer;transition:.15s ease;box-shadow:0 5px 15px rgba(0,0,0,.10)}
+    button:hover{transform:translateY(-1px);border-color:var(--accent)} button.active{background:rgba(78,193,255,.18);border-color:var(--accent);color:#dff5ff}
+    button.good{border-color:rgba(34,197,94,.6);color:#baf7cf} button.bad{border-color:rgba(239,68,68,.6);color:#fecaca} button.warn{border-color:rgba(245,158,11,.6);color:#fde68a}
+    .toolGrid,.miniGrid,.scoreBox,.row{display:grid;gap:8px}.toolGrid{grid-template-columns:1fr 1fr}.miniGrid{grid-template-columns:repeat(3,1fr)}.scoreBox,.row{grid-template-columns:1fr 1fr}
+    .metric{background:linear-gradient(180deg,#0a1322,#0b1729);border:1px solid var(--line);border-radius:16px;padding:10px}.metric .n{font-size:25px;font-weight:800;color:var(--accent)}.metric .t{font-size:11px;color:var(--muted)}
+    .small{font-size:12px;color:var(--muted);line-height:1.45}
+    .progress{height:8px;background:#07101e;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:10px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#22c55e)}
+    .sceneWrap{position:relative;overflow:hidden;min-height:420px;background:radial-gradient(circle at 50% 10%,rgba(122,190,255,.12),transparent 33%),linear-gradient(180deg,#09111d,#050a13)}
+    #sceneCanvas{display:block;width:100%;height:100%}
+    .sceneHud{position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}.hudItem{background:rgba(5,10,19,.78);border:1px solid rgba(160,185,215,.28);backdrop-filter:blur(8px);padding:8px 10px;border-radius:999px;font-size:12px;color:#eef6ff}
+    .controls3d{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;background:rgba(5,10,19,.78);border:1px solid rgba(160,185,215,.28);border-radius:16px;padding:10px;backdrop-filter:blur(8px)}
+    input[type=range]{accent-color:var(--accent)}
+    .log{max-height:240px;overflow:auto;display:flex;flex-direction:column;gap:7px}.logItem{background:#07101e;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:8px;font-size:12px}.logItem.good{border-left-color:var(--good)}.logItem.bad{border-left-color:var(--bad)}.logItem.warn{border-left-color:var(--warn)}
+    .evidenceCard{background:#07101e;border:1px solid var(--line);border-radius:14px;padding:11px;margin-bottom:9px}.evidenceCard.selected{border-color:var(--accent);box-shadow:0 0 0 1px rgba(78,193,255,.35) inset}.evidenceCard h3{margin:0 0 6px;font-size:14px}.statePills{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.pill{font-size:10px;border-radius:999px;border:1px solid var(--line);padding:4px 6px;color:#bfd0e6}.pill.ok{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.5)}.pill.bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.5)}
+    .footerNote{font-size:11px;color:var(--muted);line-height:1.45;margin-top:10px}
+    .modalBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modal{width:min(980px,96vw);max-height:92vh;overflow:auto;background:#0d1627;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 30px 120px rgba(0,0,0,.55)}.modal h2{margin:0 0 8px}.modalActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+    .manualSection{background:#07101e;border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px}.manualSection h3{margin:0 0 6px;font-size:14px}.manualSection ul{margin:8px 0 0 18px;padding:0}.reportBox{white-space:pre-wrap;background:#07101e;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:12px;line-height:1.55}
+    .banner{padding:10px;border-radius:14px;background:rgba(78,193,255,.10);border:1px solid rgba(78,193,255,.25);font-size:12px;line-height:1.5;color:#d8efff}
+    .notice{font-size:11px;color:var(--muted);line-height:1.45}
+    @media(max-width:1180px){.app{grid-template-columns:1fr;height:auto}.sceneWrap{height:680px}}
+    @media(max-width:700px){.app{padding:8px}.scoreBox,.row,.toolGrid,.miniGrid,.formGrid{grid-template-columns:1fr}.controls3d{flex-direction:column;align-items:stretch}.sceneWrap{height:520px}header{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Simulador 3D Realista de Investigación Judicial y Cadena de Custodia</h1>
+      <div class="subtitle">Práctica académica para estudiantes de investigación judicial en Colombia. Entrena aseguramiento de escena, fijación, recolección, embalaje, rotulado, cadena de custodia y entrega de EMP/EF.</div>
+    </div>
+    <div class="badge">Modo web ejecutable</div>
+  </header>
+
+  <aside class="panel">
+    <div class="sectionTitle">Configuración</div>
+    <label>Rol del participante</label>
+    <select id="roleSelect">
+      <option>Primer responsable</option>
+      <option>Investigador judicial</option>
+      <option>Coordinador de escena</option>
+      <option>Perito de laboratorio - básico</option>
+    </select>
+    <label>Escenario</label>
+    <select id="scenarioSelect"></select>
+    <div class="miniGrid" style="margin-top:10px">
+      <button id="loadScenario" class="good">Cargar escenario</button>
+      <button id="manualBtn">Manual</button>
+      <button id="teacherBtn">Editor docente</button>
+    </div>
+
+    <div class="scoreBox" style="margin-top:12px">
+      <div class="metric"><div class="n" id="scoreValue">0</div><div class="t">Puntaje</div></div>
+      <div class="metric"><div class="n" id="gradeValue">-</div><div class="t">Nivel</div></div>
+    </div>
+
+    <div class="sectionTitle">Procedimiento</div>
+    <div class="progress"><div id="procedureBar" class="bar"></div></div>
+    <div class="small" id="phaseLabel">Fase inicial pendiente.</div>
+
+    <div class="sectionTitle">Acciones globales</div>
+    <div class="toolGrid">
+      <button data-global="USE_EPP">Usar EPP</button>
+      <button data-global="CORDON">Acordonar</button>
+      <button data-global="ROUTE">Ruta ingreso/salida</button>
+      <button data-global="SEARCH_METHOD">Método de búsqueda</button>
+      <button data-global="INTERVIEW">Separar/entrevistar testigos</button>
+      <button data-global="REPORT_INIT">Reporte de iniciación</button>
+    </div>
+
+    <label>Método de búsqueda</label>
+    <select id="searchMethod">
+      <option value="zonas">Por zonas</option>
+      <option value="espiral">Espiral</option>
+      <option value="franjas">Franjas</option>
+      <option value="cuadricula">Cuadrícula</option>
+      <option value="punto_a_punto">Punto a punto</option>
+    </select>
+
+    <div class="sectionTitle">Herramientas EMP/EF</div>
+    <div class="toolGrid" id="toolGrid"></div>
+    <div class="footerNote">Seleccione una herramienta y luego haga clic sobre un EMP/EF dentro de la escena. Para embalaje, rótulo y cadena de custodia ya no aparecen sugerencias de respuesta: el estudiante debe decidir y diligenciar.</div>
+  </aside>
+
+  <main class="sceneWrap">
+    <canvas id="sceneCanvas"></canvas>
+    <div class="sceneHud">
+      <div class="hudItem" id="scenarioTitle">Sin escenario</div>
+      <div class="hudItem" id="selectedTool">Herramienta: ninguna</div>
+      <div class="hudItem" id="selectedEvidence">EMP/EF: ninguno</div>
+    </div>
+    <div class="controls3d">
+      <div class="small">Rotación 3D <input id="rotationSlider" type="range" min="-68" max="68" value="34"></div>
+      <div class="small">Zoom <input id="zoomSlider" type="range" min="18" max="48" value="32"></div>
+      <div>
+        <button id="finalizeBtn" class="good">Finalizar práctica</button>
+      </div>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <div class="sectionTitle">EMP/EF del escenario</div>
+    <div id="evidenceList"></div>
+
+    <div class="sectionTitle">Bitácora</div>
+    <div class="log" id="actionLog"></div>
+
+    <div class="sectionTitle">Descargas</div>
+    <div class="toolGrid">
+      <button id="downloadReport">Informe TXT</button>
+      <button id="downloadJson">Registro JSON</button>
+      <button id="downloadCsv">Bitácora CSV</button>
+      <button id="resetBtn" class="bad">Reiniciar</button>
+    </div>
+    <div class="footerNote">El simulador es web y funciona en navegador. También puedo entregarlo en <b>HTML standalone</b>, <b>ZIP</b> o dejarlo como base para migración a <b>Unity/WebGL</b>.</div>
+  </aside>
+</div>
+
+<div id="manualModal" class="modalBackdrop">
+  <div class="modal">
+    <h2>Manual instructivo del simulador</h2>
+    <div class="banner">Este manual explica, en lenguaje claro, cómo realizar la práctica. El objetivo del ejercicio es aprender a intervenir correctamente una escena, preservar EMP/EF y diligenciar registros básicos sin recibir la respuesta correcta durante la actividad.</div>
+    <div class="manualSection">
+      <h3>1. Objetivo del ejercicio</h3>
+      <div class="small">El participante debe actuar como investigador judicial o primer responsable. Debe asegurar el lugar, fijar la escena, intervenir EMP/EF, elegir el embalaje correcto, diligenciar el rótulo, llenar el registro básico de cadena de custodia y entregar la evidencia.</div>
+    </div>
+    <div class="manualSection">
+      <h3>2. Secuencia recomendada</h3>
+      <ul class="small">
+        <li>Use EPP antes de intervenir.</li>
+        <li>Acordone la escena y controle el acceso.</li>
+        <li>Defina ruta de ingreso/salida y método de búsqueda.</li>
+        <li>Observe el EMP/EF, fotografíe y señalice antes de manipular.</li>
+        <li>Recolecte el EMP/EF.</li>
+        <li>Seleccione el embalaje que considere correcto.</li>
+        <li>Diligencie el rótulo básico.</li>
+        <li>Diligencie la cadena de custodia básica.</li>
+        <li>Entregue el EMP/EF al destino correspondiente.</li>
+      </ul>
+    </div>
+    <div class="manualSection">
+      <h3>3. Cómo interactuar</h3>
+      <ul class="small">
+        <li>En el panel izquierdo seleccione herramientas.</li>
+        <li>En el panel central haga clic sobre el EMP/EF en la escena 3D.</li>
+        <li>Los formularios deben ser llenados manualmente por el estudiante.</li>
+        <li>El sistema asigna puntaje positivo o negativo según el orden de las acciones y la calidad del diligenciamiento.</li>
+      </ul>
+    </div>
+    <div class="manualSection">
+      <h3>4. Cómo se califica</h3>
+      <div class="small">El sistema suma puntos por buenas prácticas y descuenta puntos por errores, por ejemplo: embalar mal, diligenciar mal el rótulo, omitir datos esenciales en cadena de custodia, manipular sin fijar antes, o intervenir sin EPP.</div>
+    </div>
+    <div class="manualSection">
+      <h3>5. Reglas del simulador</h3>
+      <ul class="small">
+        <li>No se entregan pistas sobre la respuesta correcta durante el embalaje.</li>
+        <li>Los formatos deben ser completados por el estudiante.</li>
+        <li>El ejercicio es académico y no reemplaza documentos oficiales reales.</li>
+      </ul>
+    </div>
+    <div class="modalActions">
+      <button id="closeManual" class="good">Entendido, iniciar práctica</button>
+    </div>
+  </div>
+</div>
+
+<div id="packageModal" class="modalBackdrop">
+  <div class="modal" style="max-width:560px">
+    <h2>Seleccionar embalaje</h2>
+    <div class="small">Seleccione el embalaje o contenedor que usted considere adecuado para el EMP/EF. El sistema no mostrará la opción correcta durante la actividad.</div>
+    <label>EMP/EF seleccionado</label>
+    <input id="pkgEvidenceName" readonly>
+    <label>Tipo de embalaje</label>
+    <select id="packageChoice">
+      <option value="">Seleccione una opción</option>
+      <option value="bolsa_papel">Bolsa de papel</option>
+      <option value="bolsa_plastica">Bolsa plástica</option>
+      <option value="bolsa_antiestatica">Bolsa antiestática</option>
+      <option value="caja_rigida">Caja rígida</option>
+      <option value="sobre_papel">Sobre de papel</option>
+      <option value="contenedor_vidrio">Frasco o contenedor hermético</option>
+    </select>
+    <div class="modalActions">
+      <button id="cancelPackage">Cancelar</button>
+      <button id="savePackage" class="good">Guardar embalaje</button>
+    </div>
+  </div>
+</div>
+
+<div id="labelModal" class="modalBackdrop">
+  <div class="modal">
+    <h2>Diligenciamiento de rótulo básico</h2>
+    <div class="small">Complete las casillas del rótulo. El puntaje dependerá del diligenciamiento. No se muestra la respuesta correcta durante la práctica.</div>
+    <div class="formGrid">
+      <div><label>NUNC / Caso</label><input id="lblNunc"></div>
+      <div><label>ID EMP/EF</label><input id="lblEvidenceId"></div>
+      <div><label>Descripción breve</label><input id="lblDescription"></div>
+      <div><label>Fecha de recolección</label><input id="lblDate" type="date"></div>
+      <div><label>Hora de recolección</label><input id="lblTime" type="time"></div>
+      <div><label>Lugar de hallazgo</label><input id="lblLocation"></div>
+      <div><label>Recolectado por</label><input id="lblCollectedBy"></div>
+      <div><label>Tipo de embalaje</label><input id="lblPackaging"></div>
+      <div class="full"><label>Observaciones</label><textarea id="lblObs" placeholder="Datos relevantes del estado del EMP/EF o del contenedor"></textarea></div>
+    </div>
+    <div class="modalActions">
+      <button id="cancelLabel">Cancelar</button>
+      <button id="saveLabel" class="good">Guardar rótulo</button>
+    </div>
+  </div>
+</div>
+
+<div id="custodyModal" class="modalBackdrop">
+  <div class="modal">
+    <h2>Registro básico de cadena de custodia</h2>
+    <div class="small">Complete las casillas mínimas del registro. El sistema califica si el diligenciamiento es suficiente y coherente con la actividad realizada.</div>
+    <div class="formGrid">
+      <div><label>NUNC / Caso</label><input id="ccNunc"></div>
+      <div><label>ID EMP/EF</label><input id="ccId"></div>
+      <div><label>Fecha</label><input id="ccDate" type="date"></div>
+      <div><label>Hora</label><input id="ccTime" type="time"></div>
+      <div><label>Quien entrega</label><input id="ccFrom"></div>
+      <div><label>Quien recibe</label><input id="ccTo"></div>
+      <div><label>Destino o propósito</label><input id="ccPurpose"></div>
+      <div><label>Estado del contenedor</label><input id="ccContainer"></div>
+      <div class="full"><label>Descripción del EMP/EF y embalaje</label><textarea id="ccDescription"></textarea></div>
+      <div class="full"><label>Observaciones</label><textarea id="ccObs"></textarea></div>
+    </div>
+    <div class="modalActions">
+      <button id="cancelCustody">Cancelar</button>
+      <button id="saveCustody" class="good">Guardar registro</button>
+    </div>
+  </div>
+</div>
+
+<div id="reportModal" class="modalBackdrop">
+  <div class="modal">
+    <h2>Retroalimentación final</h2>
+    <div id="reportContent" class="reportBox"></div>
+    <div class="modalActions">
+      <button id="closeReport">Cerrar</button>
+      <button id="downloadReport2" class="good">Descargar informe</button>
+    </div>
+  </div>
+</div>
+
+<div id="teacherModal" class="modalBackdrop">
+  <div class="modal">
+    <h2>Editor docente de escenarios JSON</h2>
+    <div class="small">Pegue un escenario JSON compatible y pulse cargar. Así el docente agrega nuevos casos sin tocar el código principal.</div>
+    <label>JSON del escenario</label>
+    <textarea id="teacherJson" style="min-height:340px;font-family:ui-monospace,monospace;font-size:12px"></textarea>
+    <div class="modalActions">
+      <button id="copyScenario">Copiar JSON actual</button>
+      <button id="closeTeacher">Cerrar</button>
+      <button id="loadTeacherJson" class="good">Cargar JSON</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const PACKAGING_LABELS = {
+  bolsa_papel:'Bolsa de papel', bolsa_plastica:'Bolsa plástica', bolsa_antiestatica:'Bolsa antiestática',
+  caja_rigida:'Caja rígida', sobre_papel:'Sobre de papel', contenedor_vidrio:'Frasco o contenedor hermético'
+};
+
+const TOOL_DEFS = [
+  {id:'OBSERVE', label:'Observar'},
+  {id:'PHOTOGRAPH', label:'Fotografiar'},
+  {id:'MARK', label:'Numerador'},
+  {id:'COLLECT', label:'Recolectar'},
+  {id:'PACKAGE', label:'Embalar'},
+  {id:'LABEL', label:'Rotular'},
+  {id:'CUSTODY', label:'Cadena custodia'},
+  {id:'DELIVER', label:'Entregar'}
+];
+
+const DEFAULT_SCENARIOS = [
+  {
+    scenarioId:'SCN-CER-001',
+    title:'Apartamento urbano - posible homicidio simulado', environmentType:'cerrado',
+    penalReference:'Conducta contra la vida e integridad personal. Referencia pedagógica.', recommendedSearchMethod:'zonas',
+    initialNarrative:'Central reporta un posible hecho delictivo en un apartamento. El participante debe actuar asegurando, observando, fijando, recolectando y documentando correctamente.',
+    nunc:'470016000000202600001', dimensions:{w:16,d:12}, sceneLocation:'Apartamento urbano - sala y comedor',
+    witnesses:[{id:'T-001',name:'Vecina del piso',mustBeSeparated:true,hasRelevantInfo:true},{id:'T-002',name:'Familiar alterado',mustBeSeparated:true,hasRelevantInfo:false}],
+    evidenceItems:[
+      {id:'EMP-001',name:'Vainilla simulada',nature:'balística',x:2.2,z:-1.1,w:.55,d:.35,h:.15,correctPackaging:'caja_rigida',labDestination:'Balística forense',description:'Elemento pequeño de color latón sobre el piso de la sala.',requiresPhotoBeforeCollection:true},
+      {id:'EMP-002',name:'Celular encendido',nature:'digital',x:-3.5,z:1.8,w:.8,d:.45,h:.14,correctPackaging:'bolsa_antiestatica',labDestination:'Informática forense',description:'Dispositivo móvil sobre mesa auxiliar.',requiresPhotoBeforeCollection:true},
+      {id:'EMP-003',name:'Prenda con mancha',nature:'biológica',x:4.2,z:2.8,w:1.2,d:.7,h:.08,correctPackaging:'bolsa_papel',labDestination:'Biología / genética forense',description:'Prenda textil con mancha no gráfica.',requiresPhotoBeforeCollection:true},
+      {id:'EMP-004',name:'Documento doblado',nature:'documental',x:1.1,z:3.7,w:1.0,d:.65,h:.04,correctPackaging:'sobre_papel',labDestination:'Documentología',description:'Documento hallado cerca de la entrada.',requiresPhotoBeforeCollection:true}
+    ]
+  },
+  {
+    scenarioId:'SCN-ABI-001',
+    title:'Parque público - posible hurto con lesiones simulado', environmentType:'abierto',
+    penalReference:'Conducta contra el patrimonio y posible lesión personal. Referencia pedagógica.', recommendedSearchMethod:'franjas',
+    initialNarrative:'En zona abierta se reporta un posible hurto con lesión. Hay riesgo de pérdida de EMP/EF por clima y paso de personas.',
+    nunc:'470016100000202600002', dimensions:{w:20,d:16}, sceneLocation:'Parque público - sendero y zona verde',
+    witnesses:[{id:'T-003',name:'Vendedor ambulante',mustBeSeparated:true,hasRelevantInfo:true},{id:'T-004',name:'Transeúnte',mustBeSeparated:true,hasRelevantInfo:true}],
+    evidenceItems:[
+      {id:'EMP-A01',name:'Objeto contundente simulado',nature:'física',x:-4.6,z:1.2,w:1.25,d:.45,h:.25,correctPackaging:'caja_rigida',labDestination:'Clínica y patología / lofoscopia',description:'Objeto rígido sobre zona verde.',requiresPhotoBeforeCollection:true},
+      {id:'EMP-A02',name:'Fragmento de vidrio',nature:'traza',x:2.7,z:-2.8,w:.55,d:.32,h:.12,correctPackaging:'caja_rigida',labDestination:'Evidencia traza',description:'Fragmento pequeño sobre sendero.',requiresPhotoBeforeCollection:true},
+      {id:'EMP-A03',name:'Bolso abandonado',nature:'física/documental',x:5.4,z:3.3,w:1.2,d:.8,h:.55,correctPackaging:'bolsa_papel',labDestination:'Lofoscopia / análisis documental',description:'Bolso con documentos ficticios.',requiresPhotoBeforeCollection:true},
+      {id:'EMP-A04',name:'Dispositivo de video',nature:'digital',x:-7.4,z:-5.2,w:.7,d:.35,h:1.4,correctPackaging:'bolsa_antiestatica',labDestination:'Informática forense / video',description:'Fuente de video simulado en poste.',requiresPhotoBeforeCollection:true}
+    ]
+  }
+];
+
+const app = {canvas:null,ctx:null,current:null,score:0,selectedTool:null,selectedEvidence:null,rotation:34*Math.PI/180,scale:32,global:{epp:false,cordon:false,route:false,searchMethod:false,interview:false,reportInit:false},log:[],records:[],pendingPackageEvidence:null,pendingLabelEvidence:null,pendingCustodyEvidence:null};
+
+function $(id){ return document.getElementById(id); }
+function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+function safe(text){ return String(text ?? '').replace(/[&<>\"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
+function normalize(v){ return String(v ?? '').trim().toLowerCase().replace(/\s+/g,' '); }
+function showModal(id){ $(id).style.display='flex'; }
+function hideModal(id){ $(id).style.display='none'; }
+
+function addLog(message, type='info', points=0){ app.log.unshift({time:new Date().toISOString(), message, type, points, score:app.score}); renderLog(); }
+function score(points, message, type){ app.score += points; addLog(`${points>=0?'+':''}${points} pts - ${message}`, type || (points>=0?'good':'bad'), points); renderScore(); }
+function grade(){ if(app.score>=180) return 'Excelente'; if(app.score>=130) return 'Adecuado'; if(app.score>=85) return 'Corregible'; if(app.score>0) return 'Crítico'; return '-'; }
+function progressPercent(){ if(!app.current) return 0; const ev = app.current.evidenceItems || []; const totalEvidence = ev.length * 8; const done = ev.reduce((a,e)=>a+['observed','photographed','marked','collected','packaged','labeled','custody','delivered'].filter(k=>e.state?.[k]).length,0); const globals = Object.values(app.global).filter(Boolean).length; return Math.min(100, Math.round(((done + globals)/(totalEvidence + 6))*100)); }
+function updatePhase(){ let msg='Fase: recepción, verificación y preparación inicial.'; if(app.global.epp && !app.global.cordon) msg='Fase: asegurar la escena mediante acordonamiento.'; else if(app.global.cordon && !app.global.route) msg='Fase: definir ruta y método de búsqueda.'; else if(app.global.route && app.global.searchMethod) msg='Fase: intervenir EMP/EF y diligenciar registros.'; if(app.current){ const delivered = app.current.evidenceItems.filter(e=>e.state.delivered).length; if(delivered===app.current.evidenceItems.length) msg='Fase: cierre, entrega final e informe.'; } $('phaseLabel').textContent=msg; }
+function renderScore(){ $('scoreValue').textContent=app.score; $('gradeValue').textContent=grade(); $('procedureBar').style.width=progressPercent()+'%'; updatePhase(); }
+function renderLog(){ $('actionLog').innerHTML = app.log.map(l=>`<div class="logItem ${l.type}"><b>${new Date(l.time).toLocaleTimeString('es-CO',{hour12:false})}</b><br>${safe(l.message)}</div>`).join(''); }
+function renderEvidenceList(){ if(!app.current) return; $('evidenceList').innerHTML = app.current.evidenceItems.map(e=>`<div class="evidenceCard ${app.selectedEvidence===e?'selected':''}"><h3>${safe(e.id)} - ${safe(e.name)}</h3><div class="small">${safe(e.description)}<br><b>Naturaleza:</b> ${safe(e.nature)}<br><b>Destino:</b> ${safe(e.labDestination||'N/D')}</div><div class="statePills">${pill(e.state.observed,'Observado')}${pill(e.state.photographed,'Fotografiado')}${pill(e.state.marked,'Señalizado')}${pill(e.state.collected,'Recolectado')}${pill(e.state.packaged,'Embalado')}${pill(e.state.labeled,'Rotulado')}${pill(e.state.custody,'Cadena')}${pill(e.state.delivered,'Entregado')}${e.state.contaminated?'<span class="pill bad">Contaminado</span>':''}</div></div>`).join(''); }
+function pill(ok,label){ return `<span class="pill ${ok?'ok':''}">${label}</span>`; }
+
+function setupScenarioSelect(){ const sel=$('scenarioSelect'); sel.innerHTML=''; DEFAULT_SCENARIOS.forEach((s,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=s.title; sel.appendChild(o); }); }
+function setupTools(){ const grid=$('toolGrid'); grid.innerHTML=''; TOOL_DEFS.forEach(t=>{ const b=document.createElement('button'); b.textContent=t.label; b.dataset.tool=t.id; grid.appendChild(b); }); }
+
+function init(){ app.canvas=$('sceneCanvas'); app.ctx=app.canvas.getContext('2d'); setupScenarioSelect(); setupTools(); setupEvents(); loadScenario(DEFAULT_SCENARIOS[0]); showModal('manualModal'); requestAnimationFrame(drawLoop); }
+
+function setupEvents(){
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
+  $('loadScenario').addEventListener('click', ()=>loadScenario(DEFAULT_SCENARIOS[Number($('scenarioSelect').value)]));
+  $('manualBtn').addEventListener('click', ()=>showModal('manualModal'));
+  $('closeManual').addEventListener('click', ()=>hideModal('manualModal'));
+  $('toolGrid').addEventListener('click', ev=>{ const btn=ev.target.closest('button[data-tool]'); if(!btn) return; app.selectedTool=btn.dataset.tool; document.querySelectorAll('#toolGrid button').forEach(b=>b.classList.toggle('active', b===btn)); $('selectedTool').textContent='Herramienta: '+btn.textContent; });
+  document.querySelectorAll('[data-global]').forEach(btn=>btn.addEventListener('click', ()=>applyGlobal(btn.dataset.global, btn)));
+  app.canvas.addEventListener('click', onCanvasClick);
+  $('rotationSlider').addEventListener('input', e=>{ app.rotation=Number(e.target.value)*Math.PI/180; drawScene(); });
+  $('zoomSlider').addEventListener('input', e=>{ app.scale=Number(e.target.value); drawScene(); });
+  $('resetBtn').addEventListener('click', ()=>loadScenario(app.current || DEFAULT_SCENARIOS[0]));
+  $('finalizeBtn').addEventListener('click', finalizePractice);
+  $('downloadReport').addEventListener('click', ()=>downloadText('informe_simulador_cadena_custodia.txt', buildReport()));
+  $('downloadReport2').addEventListener('click', ()=>downloadText('informe_simulador_cadena_custodia.txt', buildReport()));
+  $('downloadJson').addEventListener('click', ()=>downloadText('registro_simulador.json', JSON.stringify(exportData(), null, 2)));
+  $('downloadCsv').addEventListener('click', ()=>downloadText('bitacora_simulador.csv', buildCSV()));
+  $('cancelPackage').addEventListener('click', ()=>hideModal('packageModal')); $('savePackage').addEventListener('click', savePackage);
+  $('cancelLabel').addEventListener('click', ()=>hideModal('labelModal')); $('saveLabel').addEventListener('click', saveLabelRecord);
+  $('cancelCustody').addEventListener('click', ()=>hideModal('custodyModal')); $('saveCustody').addEventListener('click', saveCustodyRecord);
+  $('closeReport').addEventListener('click', ()=>hideModal('reportModal'));
+  $('teacherBtn').addEventListener('click', openTeacherEditor); $('closeTeacher').addEventListener('click', ()=>hideModal('teacherModal'));
+  $('copyScenario').addEventListener('click', ()=>navigator.clipboard.writeText($('teacherJson').value)); $('loadTeacherJson').addEventListener('click', loadTeacherJson);
+}
+
+function resizeCanvas(){ const rect=app.canvas.parentElement.getBoundingClientRect(); app.canvas.width=Math.floor(rect.width*devicePixelRatio); app.canvas.height=Math.floor(rect.height*devicePixelRatio); app.ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); drawScene(); }
+
+function loadScenario(scenario){
+  app.current=deepClone(scenario); app.current.evidenceItems.forEach(e=>e.state={observed:false,photographed:false,marked:false,collected:false,packaged:false,labeled:false,custody:false,delivered:false,contaminated:false,package:null,labelRecord:null});
+  app.score=0; app.selectedTool=null; app.selectedEvidence=null; app.log=[]; app.records=[]; app.global={epp:false,cordon:false,route:false,searchMethod:false,interview:false,reportInit:false};
+  document.querySelectorAll('button.active').forEach(b=>b.classList.remove('active')); $('scenarioTitle').textContent=app.current.title; $('selectedTool').textContent='Herramienta: ninguna'; $('selectedEvidence').textContent='EMP/EF: ninguno';
+  addLog(`Escenario cargado: ${app.current.title}`, 'info'); addLog(app.current.initialNarrative, 'info'); renderEvidenceList(); renderScore(); drawScene();
+}
+
+function applyGlobal(action, btn){
+  if(action==='USE_EPP'){ if(app.global.epp) return score(-2,'EPP ya fue registrado.','warn'); app.global.epp=true; btn.classList.add('active'); return score(10,'Usó EPP antes de intervenir.','good'); }
+  if(action==='CORDON'){ if(app.global.cordon) return score(-2,'Acordonamiento ya registrado.','warn'); if(!app.global.epp) score(-10,'Acordonó sin registrar EPP previo.','warn'); app.global.cordon=true; btn.classList.add('active'); return score(10,'Acordonó la escena.','good'); }
+  if(action==='ROUTE'){ if(app.global.route) return score(-2,'Ruta ya definida.','warn'); if(!app.global.cordon) score(-12,'Definió ruta sin acordonar primero.','bad'); app.global.route=true; btn.classList.add('active'); return score(10,'Definió ruta de ingreso y salida.','good'); }
+  if(action==='SEARCH_METHOD'){ if(app.global.searchMethod) return score(-2,'Método de búsqueda ya registrado.','warn'); const method=$('searchMethod').value; app.global.searchMethod=true; btn.classList.add('active'); if(method===app.current.recommendedSearchMethod) return score(15,`Seleccionó método adecuado: ${method}.`,'good'); return score(6,`Seleccionó método ${method}.`,'warn'); }
+  if(action==='INTERVIEW'){ if(app.global.interview) return score(-2,'Gestión de testigos ya registrada.','warn'); app.global.interview=true; btn.classList.add('active'); return score(10,'Separó e individualizó testigos.','good'); }
+  if(action==='REPORT_INIT'){ if(app.global.reportInit) return score(-2,'Reporte de iniciación ya registrado.','warn'); app.global.reportInit=true; btn.classList.add('active'); return score(12,'Registró el reporte de iniciación.','good'); }
+}
+
+function onCanvasClick(ev){
+  if(!app.current) return; const rect=app.canvas.getBoundingClientRect(); const x=ev.clientX-rect.left, y=ev.clientY-rect.top;
+  const found=[...app.current.evidenceItems].reverse().find(e=>e.screen && x>=e.screen.x && x<=e.screen.x+e.screen.w && y>=e.screen.y && y<=e.screen.y+e.screen.h);
+  if(!found){ app.selectedEvidence=null; $('selectedEvidence').textContent='EMP/EF: ninguno'; renderEvidenceList(); drawScene(); return; }
+  app.selectedEvidence=found; $('selectedEvidence').textContent='EMP/EF: '+found.name; if(app.selectedTool) applyEvidenceTool(app.selectedTool, found); else addLog(`Seleccionó ${found.id}: ${found.name}.`,'info'); renderEvidenceList(); drawScene();
+}
+
+function applyEvidenceTool(tool,e){
+  if(!app.global.epp && tool!=='OBSERVE') score(-12,'Intervino EMP/EF sin registrar EPP.','bad');
+  if(!app.global.cordon && ['PHOTOGRAPH','MARK','COLLECT','PACKAGE','LABEL','CUSTODY','DELIVER'].includes(tool)) score(-10,'Intervino EMP/EF sin acordonar la escena.','bad');
+  switch(tool){
+    case 'OBSERVE':
+      if(e.state.observed) return score(-1,`${e.name} ya había sido observado.`, 'warn');
+      e.state.observed=true; return score(5,`Observó ${e.name} sin manipularlo.`, 'good');
+    case 'PHOTOGRAPH':
+      if(e.state.photographed) return score(-2,`${e.name} ya fue fotografiado.`, 'warn');
+      e.state.photographed=true; e.state.observed=true; return score(15,`Fijó fotográficamente ${e.name}.`, 'good');
+    case 'MARK':
+      if(e.state.marked) return score(-2,`${e.name} ya estaba señalizado.`, 'warn');
+      if(!e.state.photographed) score(-8,`Señalizó ${e.name} antes de fotografía.`, 'warn');
+      e.state.marked=true; return score(10,`Señalizó ${e.name} con numerador.`, 'good');
+    case 'COLLECT':
+      if(e.state.collected) return score(-2,`${e.name} ya fue recolectado.`, 'warn');
+      if(!e.state.photographed){ e.state.contaminated=true; score(-25,`Recolectó ${e.name} sin fijación previa.`, 'bad'); }
+      if(!e.state.marked) score(-10,`Recolectó ${e.name} sin numerador previo.`, 'warn');
+      e.state.collected=true; return score(e.state.contaminated?4:15,`Recolectó ${e.name}.`, e.state.contaminated?'warn':'good');
+    case 'PACKAGE':
+      if(!e.state.collected) return score(-18,`Intentó embalar ${e.name} sin recolección previa.`, 'bad');
+      if(e.state.packaged) return score(-2,`${e.name} ya fue embalado.`, 'warn');
+      return openPackageModal(e);
+    case 'LABEL':
+      if(!e.state.packaged) return score(-18,`Intentó rotular ${e.name} sin embalaje previo.`, 'bad');
+      if(e.state.labeled) return score(-2,`${e.name} ya fue rotulado.`, 'warn');
+      return openLabelModal(e);
+    case 'CUSTODY':
+      if(!e.state.labeled) return score(-22,`Intentó diligenciar cadena de custodia de ${e.name} sin rótulo previo.`, 'bad');
+      if(e.state.custody) return score(-2,`${e.name} ya tiene cadena de custodia.`, 'warn');
+      return openCustodyModal(e);
+    case 'DELIVER':
+      if(!e.state.custody) return score(-25,`Intentó entregar ${e.name} sin cadena de custodia.`, 'bad');
+      if(e.state.delivered) return score(-2,`${e.name} ya fue entregado.`, 'warn');
+      e.state.delivered=true; return score(20,`Entregó ${e.name} a ${e.labDestination || 'destino correspondiente'}.`, 'good');
+  }
+}
+
+function openPackageModal(e){ app.pendingPackageEvidence=e; $('pkgEvidenceName').value=`${e.id} - ${e.name}`; $('packageChoice').value=''; showModal('packageModal'); }
+function savePackage(){ const e=app.pendingPackageEvidence; if(!e) return; const choice=$('packageChoice').value; if(!choice) return alert('Seleccione un tipo de embalaje.'); e.state.packaged=true; e.state.package=choice; hideModal('packageModal'); app.pendingPackageEvidence=null; if(choice===e.correctPackaging) score(15,`Embaló ${e.name} correctamente en ${PACKAGING_LABELS[choice]}.`, 'good'); else { e.state.contaminated=true; score(-15,`Embalaje inadecuado para ${e.name}.`, 'bad'); } renderEvidenceList(); drawScene(); }
+
+function openLabelModal(e){ app.pendingLabelEvidence=e; ['lblNunc','lblEvidenceId','lblDescription','lblDate','lblTime','lblLocation','lblCollectedBy','lblPackaging','lblObs'].forEach(id=>$(id).value=''); showModal('labelModal'); }
+function saveLabelRecord(){
+  const e=app.pendingLabelEvidence; if(!e) return;
+  const form={nunc:$('lblNunc').value.trim(), evidenceId:$('lblEvidenceId').value.trim(), description:$('lblDescription').value.trim(), date:$('lblDate').value, time:$('lblTime').value, location:$('lblLocation').value.trim(), collectedBy:$('lblCollectedBy').value.trim(), packaging:$('lblPackaging').value.trim(), obs:$('lblObs').value.trim()};
+  let pts=0; let errors=[];
+  if(form.nunc){ pts+=4; if(normalize(form.nunc)===normalize(app.current.nunc)) pts+=4; else errors.push('NUNC inconsistente'); } else errors.push('Falta NUNC');
+  if(form.evidenceId){ pts+=4; if(normalize(form.evidenceId)===normalize(e.id)) pts+=5; else errors.push('ID EMP/EF incorrecto'); } else errors.push('Falta ID EMP/EF');
+  if(form.description){ pts+=3; if(normalize(form.description).includes(normalize(e.name).split(' ')[0])) pts+=3; } else errors.push('Falta descripción');
+  if(form.date) pts+=2; else errors.push('Falta fecha');
+  if(form.time) pts+=2; else errors.push('Falta hora');
+  if(form.location){ pts+=3; if(normalize(form.location).includes(normalize(app.current.sceneLocation).split(' ')[0])) pts+=2; } else errors.push('Falta lugar de hallazgo');
+  if(form.collectedBy){ pts+=3; } else errors.push('Falta recolector');
+  if(form.packaging){ pts+=3; const pkgText=normalize(PACKAGING_LABELS[e.state.package]||''); if(normalize(form.packaging).includes(pkgText) || pkgText.includes(normalize(form.packaging))) pts+=4; else errors.push('Tipo de embalaje no corresponde al realmente seleccionado'); } else errors.push('Falta embalaje');
+  if(form.obs) pts+=1;
+  e.state.labelRecord=form; e.state.labeled=true; hideModal('labelModal'); app.pendingLabelEvidence=null;
+  if(errors.length===0) score(15 + Math.min(pts,10), `Rótulo de ${e.name} diligenciado correctamente.`, 'good'); else score(Math.max(-12, pts-12), `Rótulo de ${e.name} diligenciado con observaciones: ${errors.join('; ')}.`, errors.length>3?'bad':'warn');
+  renderEvidenceList(); drawScene();
+}
+
+function openCustodyModal(e){ app.pendingCustodyEvidence=e; ['ccNunc','ccId','ccDate','ccTime','ccFrom','ccTo','ccPurpose','ccContainer','ccDescription','ccObs'].forEach(id=>$(id).value=''); showModal('custodyModal'); }
+function saveCustodyRecord(){
+  const e=app.pendingCustodyEvidence; if(!e) return;
+  const record={ evidenceId:e.id, evidenceName:e.name, nunc:$('ccNunc').value.trim(), idText:$('ccId').value.trim(), date:$('ccDate').value, time:$('ccTime').value, from:$('ccFrom').value.trim(), to:$('ccTo').value.trim(), purpose:$('ccPurpose').value.trim(), container:$('ccContainer').value.trim(), description:$('ccDescription').value.trim(), obs:$('ccObs').value.trim() };
+  let pts=0; let errors=[];
+  if(record.nunc){ pts+=4; if(normalize(record.nunc)===normalize(app.current.nunc)) pts+=4; else errors.push('NUNC inconsistente'); } else errors.push('Falta NUNC');
+  if(record.idText){ pts+=4; if(normalize(record.idText)===normalize(e.id)) pts+=4; else errors.push('ID EMP/EF incorrecto'); } else errors.push('Falta ID EMP/EF');
+  if(record.date) pts+=3; else errors.push('Falta fecha');
+  if(record.time) pts+=3; else errors.push('Falta hora');
+  if(record.from) pts+=3; else errors.push('Falta quien entrega');
+  if(record.to) pts+=3; else errors.push('Falta quien recibe');
+  if(record.purpose){ pts+=3; if(normalize(record.purpose).includes('almac') || normalize(record.purpose).includes('anál') || normalize(record.purpose).includes('anal') || normalize(record.purpose).includes('lab')) pts+=2; } else errors.push('Falta destino o propósito');
+  if(record.container) pts+=2; else errors.push('Falta estado del contenedor');
+  if(record.description){ pts+=4; if(normalize(record.description).includes(normalize(e.name).split(' ')[0])) pts+=2; } else errors.push('Falta descripción del EMP/EF');
+  if(record.obs) pts+=1;
+  app.records.push(record); e.state.custody=true; hideModal('custodyModal'); app.pendingCustodyEvidence=null;
+  if(errors.length===0) score(18 + Math.min(pts,10), `Cadena de custodia de ${e.name} diligenciada correctamente.`, 'good'); else score(Math.max(-14, pts-13), `Cadena de custodia de ${e.name} con observaciones: ${errors.join('; ')}.`, errors.length>3?'bad':'warn');
+  renderEvidenceList(); drawScene();
+}
+
+function project(x,y,z){ const cos=Math.cos(app.rotation), sin=Math.sin(app.rotation); const xr=x*cos-z*sin, zr=x*sin+z*cos; const isoX=(xr-zr)*app.scale*.86, isoY=(xr+zr)*app.scale*.43 - y*app.scale; return {x:app.canvas.clientWidth/2 + isoX, y:app.canvas.clientHeight/2 + isoY + 24}; }
+function drawLoop(){ drawScene(); requestAnimationFrame(drawLoop); }
+function drawScene(){ if(!app.ctx || !app.current) return; const ctx=app.ctx; const W=app.canvas.clientWidth,H=app.canvas.clientHeight; ctx.clearRect(0,0,W,H); drawBackground(ctx,W,H); drawEnvironment(ctx); app.current.evidenceItems.forEach(e=>drawEvidence(ctx,e)); drawLegend(ctx,W,H); }
+function drawBackground(ctx,W,H){ const sky=ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#20395d'); sky.addColorStop(.35,'#132945'); sky.addColorStop(1,'#070d17'); ctx.fillStyle=sky; ctx.fillRect(0,0,W,H); const glow=ctx.createRadialGradient(W*.5,H*.14,10,W*.5,H*.14,280); glow.addColorStop(0,'rgba(155,217,255,.16)'); glow.addColorStop(1,'rgba(155,217,255,0)'); ctx.fillStyle=glow; ctx.fillRect(0,0,W,H); }
+function drawEnvironment(ctx){ app.current.environmentType==='cerrado' ? drawClosedEnvironment(ctx) : drawOpenEnvironment(ctx); }
+function drawClosedEnvironment(ctx){ const {w,d}=app.current.dimensions; drawTile(ctx,-w/2,-d/2,w,d,'#596274','#505868'); drawRoomWalls(ctx,w,d); drawCarpet(ctx,0,0,6,4,'#4b1020'); drawSofa(ctx,-4.8,-2.6); drawTable(ctx,-1.6,1.7); drawKitchenBlock(ctx,4.5,-3.4); drawDoor(ctx,6.8,4.2); if(app.global.cordon) drawCordon(ctx,-w/2-.7,-d/2-.7,w+1.4,d+1.4); if(app.global.route) drawRoute(ctx,[[-6,-4],[-3,-1],[-1,0],[2,2.2]]); }
+function drawOpenEnvironment(ctx){ const {w,d}=app.current.dimensions; drawGrass(ctx,-w/2,-d/2,w,d); drawPath(ctx,-w/2,-2,w,3); drawPath(ctx,-1,-d/2,2,d,'#657384'); drawBench(ctx,-7,4); drawLamp(ctx,7,-5); drawTree(ctx,-8,-6); drawTree(ctx,7,4); drawTree(ctx,2,-7); if(app.global.cordon) drawCordon(ctx,-w/2-.8,-d/2-.8,w+1.6,d+1.6); if(app.global.route) drawRoute(ctx,[[-9,-7],[-6,-4],[-2,-2],[2,0],[5,3]]); }
+function drawTile(ctx,x,z,w,d,color){ const p1=project(x,0,z),p2=project(x+w,0,z),p3=project(x+w,0,z+d),p4=project(x,0,z+d); ctx.fillStyle=color; ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y); ctx.lineTo(p3.x,p3.y); ctx.lineTo(p4.x,p4.y); ctx.closePath(); ctx.fill(); ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.stroke(); }
+function drawGrass(ctx,x,z,w,d){ drawTile(ctx,x,z,w,d,'#2e6f3d'); for(let i=0;i<35;i++){ const gx=x+Math.random()*w, gz=z+Math.random()*d; const p=project(gx,0.02,gz); ctx.fillStyle='rgba(255,255,255,.05)'; ctx.beginPath(); ctx.arc(p.x,p.y,1.2,0,Math.PI*2); ctx.fill(); } }
+function drawPath(ctx,x,z,w,d,color='#6d7889'){ drawTile(ctx,x,z,w,d,color); }
+function drawRoomWalls(ctx,w,d){ drawWall(ctx,-w/2,-d/2,w,0,2.4,'#d0d5dd'); drawWall(ctx,-w/2,d/2-.2,w,0,2.4,'#cfd7df'); drawWall(ctx,-w/2,-d/2,0,d,2.4,'#bac3cf'); drawWall(ctx,w/2-.2,-d/2,0,d,2.4,'#b7c1cc'); }
+function drawWall(ctx,x,z,w,d,h,color){ if(w===0) drawBox(ctx,x,0,z,.2,d,h,color); else drawBox(ctx,x,0,z,w,.2,h,color); }
+function drawCarpet(ctx,x,z,w,d,color){ drawBox(ctx,x-w/2,0.02,z-d/2,w,d,.04,color); }
+function drawSofa(ctx,x,z){ drawBox(ctx,x,0.02,z,2.8,1.2,.7,'#394354'); drawBox(ctx,x-.1,0.72,z,3.0,.25,.85,'#4a5568'); drawBox(ctx,x-.1,0.02,z-.1,.3,1.4,.75,'#4a5568'); drawBox(ctx,x+2.6,0.02,z-.1,.3,1.4,.75,'#4a5568'); }
+function drawTable(ctx,x,z){ drawBox(ctx,x,0.02,z,1.6,1.0,.12,'#8b5a2b'); drawBox(ctx,x+.1,0.12,z+.1,.12,.12,.65,'#623d18'); drawBox(ctx,x+1.38,0.12,z+.1,.12,.12,.65,'#623d18'); drawBox(ctx,x+.1,0.12,z+.78,.12,.12,.65,'#623d18'); drawBox(ctx,x+1.38,0.12,z+.78,.12,.12,.65,'#623d18'); }
+function drawKitchenBlock(ctx,x,z){ drawBox(ctx,x,0.02,z,2.7,1.2,.9,'#7b8799'); drawBox(ctx,x,0.95,z,2.7,1.2,.08,'#4a5568'); }
+function drawDoor(ctx,x,z){ drawBox(ctx,x,0.02,z,.18,1.2,2.05,'#6b4d2d'); }
+function drawBench(ctx,x,z){ drawBox(ctx,x,0.4,z,1.8,.4,.12,'#7a4a1e'); drawBox(ctx,x+.1,0,z+.1,.1,.1,.45,'#52525b'); drawBox(ctx,x+1.5,0,z+.1,.1,.1,.45,'#52525b'); drawBox(ctx,x+.1,0,z+.2,.1,.1,.45,'#52525b'); drawBox(ctx,x+1.5,0,z+.2,.1,.1,.45,'#52525b'); }
+function drawLamp(ctx,x,z){ drawBox(ctx,x,0,z,.18,.18,2.3,'#737f8d'); drawBox(ctx,x-.3,2.25,z-.3,.78,.78,.18,'#fff7c2'); }
+function drawTree(ctx,x,z){ drawBox(ctx,x,0,z,.28,.28,1.9,'#6b4423'); drawBox(ctx,x-1,1.8,z-1,2.1,2.1,1.4,'#1e6f41'); }
+function drawCordon(ctx,x,z,w,d){ const corners=[[x,z],[x+w,z],[x+w,z+d],[x,z+d]]; ctx.strokeStyle='rgba(245,158,11,.95)'; ctx.lineWidth=3; ctx.setLineDash([14,8]); for(let i=0;i<corners.length;i++){const a=project(corners[i][0],.06,corners[i][1]),b=project(corners[(i+1)%4][0],.06,corners[(i+1)%4][1]); ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();} ctx.setLineDash([]); }
+function drawRoute(ctx,pts){ ctx.strokeStyle='rgba(78,193,255,.95)'; ctx.lineWidth=3; ctx.setLineDash([5,7]); ctx.beginPath(); pts.forEach((p,i)=>{ const q=project(p[0],.08,p[1]); if(i===0) ctx.moveTo(q.x,q.y); else ctx.lineTo(q.x,q.y); }); ctx.stroke(); ctx.setLineDash([]); }
+function drawBox(ctx,x,y,z,w,d,h,color){ const p000=project(x,y,z), p100=project(x+w,y,z), p110=project(x+w,y,z+d), p010=project(x,y,z+d), p001=project(x,y+h,z), p101=project(x+w,y+h,z), p111=project(x+w,y+h,z+d), p011=project(x,y+h,z+d); ctx.fillStyle=shade(color,.18); poly(ctx,[p001,p101,p111,p011]); ctx.fillStyle=shade(color,-.03); poly(ctx,[p000,p100,p101,p001]); ctx.fillStyle=shade(color,-.15); poly(ctx,[p100,p110,p111,p101]); ctx.fillStyle=color; poly(ctx,[p010,p110,p111,p011]); ctx.strokeStyle='rgba(5,10,19,.25)'; [ [p001,p101,p111,p011],[p000,p100,p101,p001],[p100,p110,p111,p101],[p010,p110,p111,p011] ].forEach(arr=>{ ctx.beginPath(); ctx.moveTo(arr[0].x,arr[0].y); arr.slice(1).forEach(p=>ctx.lineTo(p.x,p.y)); ctx.closePath(); ctx.stroke(); }); }
+function poly(ctx,pts){ ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y)); ctx.closePath(); ctx.fill(); }
+function shade(hex,amt){ let c=hex.replace('#',''); if(c.length===3) c=c.split('').map(v=>v+v).join(''); const n=parseInt(c,16); let r=(n>>16)+Math.round(255*amt),g=((n>>8)&255)+Math.round(255*amt),b=(n&255)+Math.round(255*amt); r=Math.max(0,Math.min(255,r)); g=Math.max(0,Math.min(255,g)); b=Math.max(0,Math.min(255,b)); return `rgb(${r},${g},${b})`; }
+function colorForNature(n){ const s=(n||'').toLowerCase(); if(s.includes('digital')) return '#2563eb'; if(s.includes('biológ')||s.includes('biolog')) return '#b91c1c'; if(s.includes('bal')) return '#ca8a04'; if(s.includes('document')) return '#eab308'; if(s.includes('traza')) return '#7c3aed'; return '#16a34a'; }
+function drawEvidence(ctx,e){ const st=e.state||{}; const color=st.contaminated?'#ef4444':colorForNature(e.nature); drawShadow(ctx,e.x,e.z,1.2); drawBox(ctx,e.x-e.w/2,0.05,e.z-e.d/2,e.w,e.d,e.h,color); const top=project(e.x,e.h+.25,e.z); if(st.marked){ ctx.fillStyle='#ffffff'; ctx.strokeStyle='#111827'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(top.x,top.y-18,12,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.fillStyle='#111827'; ctx.textAlign='center'; ctx.font='bold 10px sans-serif'; ctx.fillText(e.id.split('-').pop(),top.x,top.y-14); }
+  if(st.photographed){ ctx.fillStyle='rgba(78,193,255,.95)'; roundRect(ctx,top.x-18,top.y+3,11,8,2,true,false); }
+  if(st.delivered){ ctx.fillStyle='rgba(34,197,94,.95)'; ctx.beginPath(); ctx.arc(top.x+16,top.y+8,7,0,Math.PI*2); ctx.fill(); }
+  if(app.selectedEvidence===e){ ctx.strokeStyle='rgba(78,193,255,.95)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(top.x,top.y,34,0,Math.PI*2); ctx.stroke(); ctx.lineWidth=1; }
+  ctx.fillStyle='rgba(5,10,19,.78)'; roundRect(ctx,top.x-68,top.y-54,136,22,8,true,false); ctx.fillStyle='#eef6ff'; ctx.textAlign='center'; ctx.font='12px sans-serif'; ctx.fillText(e.id,top.x,top.y-39);
+  e.screen={x:top.x-52,y:top.y-38,w:104,h:72}; }
+function drawShadow(ctx,x,z,scale){ const p=project(x,0.02,z); ctx.fillStyle='rgba(0,0,0,.23)'; ctx.beginPath(); ctx.ellipse(p.x,p.y+8,22*scale,9*scale,0,0,Math.PI*2); ctx.fill(); }
+function roundRect(ctx,x,y,w,h,r,fill,stroke){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); if(fill) ctx.fill(); if(stroke) ctx.stroke(); }
+function drawLegend(ctx,W,H){ const text=app.selectedTool ? `Herramienta activa: ${TOOL_DEFS.find(t=>t.id===app.selectedTool)?.label}` : 'Seleccione herramienta y haga clic sobre un EMP/EF'; ctx.fillStyle='rgba(5,10,19,.78)'; roundRect(ctx,W-350,60,330,42,12,true,false); ctx.fillStyle='#d8e5f7'; ctx.textAlign='left'; ctx.font='12px sans-serif'; ctx.fillText(text,W-334,86); }
+
+function finalizePractice(){ $('reportContent').textContent = buildReport(); showModal('reportModal'); }
+function pendingSteps(e){ const st=e.state; const arr=[]; ['photographed','marked','collected','packaged','labeled','custody','delivered'].forEach(k=>{ if(!st[k]) arr.push(k); }); return arr.map(k=>({photographed:'fotografía',marked:'numerador',collected:'recolección',packaged:'embalaje',labeled:'rótulo',custody:'cadena de custodia',delivered:'entrega'})[k]); }
+function feedbackText(delivered,total,contaminated){ if(delivered===total && contaminated===0 && app.score>=180) return 'Actuación sólida: preservó la escena, documentó y mantuvo la continuidad.'; if(delivered>=Math.ceil(total*.7) && contaminated<=1) return 'Actuación aceptable: refuerce diligenciamiento documental y secuencia técnica.'; return 'Actuación crítica: debe reforzar fijación previa, embalaje, rótulo y continuidad de cadena de custodia.'; }
+function buildReport(){ if(!app.current) return 'Sin escenario.'; const total=app.current.evidenceItems.length, delivered=app.current.evidenceItems.filter(e=>e.state.delivered).length, contaminated=app.current.evidenceItems.filter(e=>e.state.contaminated).length; const pending=app.current.evidenceItems.filter(e=>!e.state.delivered).map(e=>`- ${e.id} ${e.name}: ${pendingSteps(e).join(', ') || 'sin pendientes'}`).join('\n') || 'Ninguno.'; const recs=app.records.map(r=>`- ${r.evidenceId} ${r.evidenceName}: ${r.date} ${r.time}, entrega ${r.from} a ${r.to}, propósito ${r.purpose}.`).join('\n') || 'No se diligenciaron registros.'; const errors=app.log.filter(l=>l.type==='bad' || l.type==='warn').slice().reverse().map(l=>`- ${new Date(l.time).toLocaleTimeString('es-CO',{hour12:false})}: ${l.message}`).join('\n') || 'Sin errores o advertencias registradas.'; return `SIMULADOR 3D REALISTA DE INVESTIGACIÓN JUDICIAL Y CADENA DE CUSTODIA\n\nEscenario: ${app.current.title}\nID: ${app.current.scenarioId}\nRol: ${$('roleSelect').value}\nNUNC ficticio: ${app.current.nunc}\nReferencia penal: ${app.current.penalReference}\n\nPUNTAJE FINAL: ${app.score}\nCLASIFICACIÓN: ${grade()}\nPROGRESO: ${progressPercent()}%\n\nACCIONES GLOBALES\n- EPP: ${app.global.epp?'Sí':'No'}\n- Acordonamiento: ${app.global.cordon?'Sí':'No'}\n- Ruta ingreso/salida: ${app.global.route?'Sí':'No'}\n- Método de búsqueda: ${app.global.searchMethod?'Sí':'No'} (${$('searchMethod').value})\n- Gestión de testigos: ${app.global.interview?'Sí':'No'}\n- Reporte de iniciación: ${app.global.reportInit?'Sí':'No'}\n\nRESULTADO EMP/EF\n- Total EMP/EF: ${total}\n- Entregados: ${delivered}\n- Contaminados o con error grave: ${contaminated}\n\nPENDIENTES\n${pending}\n\nREGISTROS DE CADENA DE CUSTODIA\n${recs}\n\nERRORES Y ADVERTENCIAS\n${errors}\n\nRETROALIMENTACIÓN\n${feedbackText(delivered,total,contaminated)}\n\nNota: este informe es académico y no reemplaza formatos oficiales reales.`; }
+function exportData(){ return {scenario:app.current, role:$('roleSelect').value, score:app.score, grade:grade(), global:app.global, records:app.records, log:app.log}; }
+function buildCSV(){ const rows=[['fecha','tipo','puntos','puntaje','mensaje']]; app.log.slice().reverse().forEach(l=>rows.push([l.time,l.type,l.points,l.score,l.message])); return rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'); }
+function downloadText(filename, content){ const blob=new Blob([content],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }
+function openTeacherEditor(){ $('teacherJson').value=JSON.stringify(app.current,null,2); showModal('teacherModal'); }
+function loadTeacherJson(){ try{ const scenario=JSON.parse($('teacherJson').value); validateScenario(scenario); DEFAULT_SCENARIOS.push(scenario); setupScenarioSelect(); $('scenarioSelect').value=String(DEFAULT_SCENARIOS.length-1); hideModal('teacherModal'); loadScenario(scenario); } catch(err){ alert('JSON inválido o incompleto: '+err.message); } }
+function validateScenario(s){ if(!s.scenarioId || !s.title || !Array.isArray(s.evidenceItems)) throw new Error('Debe contener scenarioId, title y evidenceItems[].'); s.evidenceItems.forEach(e=>{ if(!e.id || !e.name || typeof e.x!=='number' || typeof e.z!=='number') throw new Error('Cada EMP/EF requiere id, name, x y z.'); }); }
+
+init();
+</script>
+</body>
+</html>
