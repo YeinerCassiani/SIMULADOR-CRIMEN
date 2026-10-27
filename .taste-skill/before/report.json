@@ -1,0 +1,1576 @@
+{
+ "url": "http://localhost:5199/",
+ "at": "2026-10-27T23:07:57.007Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 1,
+   "filled": [
+    1
+   ],
+   "motion": {
+    "elements": 2,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 900,
+     "screens": 1,
+     "words": 474,
+     "img": 0,
+     "video": 0,
+     "canvas": 1,
+     "svg": 0,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "🔒"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "chars": 59,
+     "lines": 1,
+     "size": 17,
+     "vw": 1.2,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": 0,
+     "leading": 1.2,
+     "top": 25,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "lines": 1,
+     "size": 17,
+     "font": "Inter"
+    },
+    "headings": [],
+    "headingSummary": {
+     "count": 0,
+     "maxLines": 0,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      24
+     ],
+     "sizeCount": 8,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 12,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 15.3
+     },
+     "measureChars": 144,
+     "max": {
+      "size": 24,
+      "vw": 1.7,
+      "font": "Inter",
+      "text": "0"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 11,
+     "microLabelShare": 0.064,
+     "microSamples": [
+      "Configuración",
+      "Permisos del rol",
+      "Procedimiento",
+      "Preparación / aseguramiento",
+      "Ciclo del EMP/EF",
+      "Acciones globales"
+     ],
+     "upperShare": 0.06,
+     "centerShare": 0.18,
+     "smallText": 51
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#0d1627",
+       "top": 221,
+       "hsl": {
+        "h": 219,
+        "s": 0.5,
+        "l": 0.1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#9db0c9",
+       "share": 0.39
+      },
+      {
+       "color": "#e6edf7",
+       "share": 0.26
+      },
+      {
+       "color": "#d8efff",
+       "share": 0.07
+      },
+      {
+       "color": "#cdd8ea",
+       "share": 0.06
+      },
+      {
+       "color": "#bccadb",
+       "share": 0.06
+      }
+     ],
+     "button": {
+      "bg": "#07101e",
+      "hsl": {
+       "h": 217,
+       "s": 0.62,
+       "l": 0.07
+      },
+      "fg": "#e6edf7"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 32,
+     "inHero": 15,
+     "radius": 10,
+     "height": 37,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Manual",
+      "Editor docente",
+      "Marco normativo",
+      "Salvamento",
+      "Registro acceso"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 1,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "div#root → radial-gradient(circle at 50% 0%, rgb(19, 33, 61), rgb(9, 17, 30) 60%, rgb(5, 10, 19))"
+     ],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 6,
+     "dashed": 0,
+     "blurred": 2,
+     "roundedBoxes": 6,
+     "boxRadius": 18,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 18,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "canvas",
+      "ratio": 0.45
+     }
+    ],
+    "nav": {
+     "links": 0,
+     "fixed": false,
+     "height": 68,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 900,
+    "margins": {
+     "left": 27,
+     "right": 27
+    },
+    "sections": [],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+      "size": 17,
+      "top": 25,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 29,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 1,
+    "bodySize": 11,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.03,
+    "voidBox": {
+     "x": 1080,
+     "y": 780,
+     "w": 360,
+     "h": 120
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": false,
+    "ground": "#ffffff",
+    "sidebar": null,
+    "topbar": null,
+    "canvas": {
+     "left": 27,
+     "right": 27
+    },
+    "hero": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "chars": 59,
+     "lines": 1,
+     "size": 17,
+     "vw": 1.2,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": 0,
+     "leading": 1.2,
+     "top": 25,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 4,
+     "firstScreen": 4,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 6,
+     "radii": [
+      [
+       18,
+       4
+      ],
+      [
+       12,
+       2
+      ]
+     ],
+     "heavyBorders": 6,
+     "borderSamples": [
+      "#30445f on #080e1a (1.95:1)",
+      "#30445f on #080e1a (1.95:1)",
+      "#30445f on #ffffff (9.92:1)"
+     ],
+     "heavyShadows": 1,
+     "softShadows": 0,
+     "shadowSamples": [
+      "rgba(0, 0, 0, 0.55) 0px 30px 120px 0px"
+     ],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.65,
+     "tiny": 4,
+     "tinySamples": [
+      "Condicionado 10px",
+      "Condicionado 10px",
+      "Preparación / aseguramie 10px",
+      "Ciclo del EMP/EF 10px"
+     ],
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      16,
+      17,
+      24
+     ]
+    },
+    "title": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "size": 17,
+     "top": 25
+    },
+    "colourShare": 0.002
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "motion": {
+    "elements": 2,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 3332,
+     "screens": 3.3,
+     "words": 360,
+     "img": 0,
+     "video": 0,
+     "canvas": 1,
+     "svg": 0,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "🔒"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "chars": 59,
+     "lines": 1,
+     "size": 17,
+     "vw": 2.2,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": 0,
+     "leading": 1.2,
+     "top": 25,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "lines": 1,
+     "size": 17,
+     "font": "Inter"
+    },
+    "headings": [],
+    "headingSummary": {
+     "count": 0,
+     "maxLines": 0,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      16,
+      17,
+      24
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 11,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 8.7
+     },
+     "measureChars": 130,
+     "max": {
+      "size": 24,
+      "vw": 3.1,
+      "font": "Inter",
+      "text": "0"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 11,
+     "microLabelShare": 0.089,
+     "microSamples": [
+      "Configuración",
+      "Permisos del rol",
+      "Procedimiento",
+      "Preparación / aseguramiento",
+      "Ciclo del EMP/EF",
+      "Acciones globales"
+     ],
+     "upperShare": 0.09,
+     "centerShare": 0.24,
+     "smallText": 42
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#080e1a",
+       "top": 92,
+       "hsl": {
+        "h": 220,
+        "s": 0.53,
+        "l": 0.07
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#e6edf7",
+       "share": 0.32
+      },
+      {
+       "color": "#9db0c9",
+       "share": 0.3
+      },
+      {
+       "color": "#cdd8ea",
+       "share": 0.09
+      },
+      {
+       "color": "#bccadb",
+       "share": 0.08
+      },
+      {
+       "color": "#c9d8ec",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#07101e",
+      "hsl": {
+       "h": 217,
+       "s": 0.62,
+       "l": 0.07
+      },
+      "fg": "#e6edf7"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 31,
+     "inHero": 5,
+     "radius": 10,
+     "height": 37,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Manual",
+      "Editor docente",
+      "Marco normativo",
+      "Salvamento",
+      "Registro acceso"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 3,
+     "scrims": 0,
+     "gradientSamples": [
+      "div#root → radial-gradient(circle at 50% 0%, rgb(19, 33, 61), rgb(9, 17, 30) 60%, rgb(5, 10, 19))",
+      "div.metric → linear-gradient(rgb(10, 19, 34), rgb(11, 23, 41))",
+      "div.metric → linear-gradient(rgb(10, 19, 34), rgb(11, 23, 41))"
+     ],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 3,
+     "dashed": 0,
+     "blurred": 2,
+     "roundedBoxes": 3,
+     "boxRadius": 18,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 18,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": false,
+     "height": 68,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 3332,
+    "margins": {
+     "left": 27,
+     "right": 27
+    },
+    "sections": [
+     {
+      "sel": "div.perm-list",
+      "tag": "div",
+      "top": 256,
+      "height": 284,
+      "words": 31,
+      "media": 0,
+      "middle": 434,
+      "heading": null,
+      "left": 36,
+      "right": 45,
+      "textLeft": 36,
+      "textRight": 45,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid2",
+      "tag": "div",
+      "top": 636,
+      "height": 127,
+      "words": 8,
+      "media": 0,
+      "middle": 8,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 154,
+      "textRight": 161,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.roadmap",
+      "tag": "div",
+      "top": 922,
+      "height": 394,
+      "words": 33,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 27,
+      "right": 462,
+      "textLeft": 27,
+      "textRight": 462,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid2",
+      "tag": "div",
+      "top": 1377,
+      "height": 172,
+      "words": 17,
+      "media": 0,
+      "middle": 8,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 125,
+      "textRight": 136,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid2",
+      "tag": "div",
+      "top": 1647,
+      "height": 217,
+      "words": 20,
+      "media": 0,
+      "middle": 8,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 146,
+      "textRight": 149,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "aside.panel.panel-right",
+      "tag": "aside",
+      "top": 2646,
+      "height": 674,
+      "words": 53,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 27,
+      "textRight": 49,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "main.scene-wrap",
+      "tag": "main",
+      "top": 1918,
+      "height": 717,
+      "words": 13,
+      "media": 1,
+      "middle": 0,
+      "heading": null,
+      "left": 13,
+      "right": 13,
+      "textLeft": 36,
+      "textRight": 497,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+      "size": 17,
+      "top": 25,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 29,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 1,
+    "bodySize": 11,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": false,
+    "ground": "#ffffff",
+    "sidebar": null,
+    "topbar": null,
+    "canvas": {
+     "left": 27,
+     "right": 27
+    },
+    "hero": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "chars": 59,
+     "lines": 1,
+     "size": 17,
+     "vw": 2.2,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": 0,
+     "leading": 1.2,
+     "top": 25,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 3,
+     "firstScreen": 1,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 3,
+     "radii": [
+      [
+       18,
+       3
+      ]
+     ],
+     "heavyBorders": 3,
+     "borderSamples": [
+      "#30445f on #080e1a (1.95:1)",
+      "#30445f on #080e1a (1.95:1)",
+      "#30445f on #ffffff (9.92:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.57,
+     "tiny": 4,
+     "tinySamples": [
+      "Condicionado 10px",
+      "Condicionado 10px",
+      "Preparación / aseguramie 10px",
+      "Ciclo del EMP/EF 10px"
+     ],
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      16,
+      17
+     ]
+    },
+    "title": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "size": 17,
+     "top": 25
+    },
+    "colourShare": 0.005
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "motion": {
+    "elements": 2,
+    "css": 0,
+    "transitions": 0,
+    "scripted": 2,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 3347,
+     "screens": 4,
+     "words": 360,
+     "img": 0,
+     "video": 0,
+     "canvas": 1,
+     "svg": 0,
+     "sections": 0,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [
+      "🔒"
+     ],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "chars": 59,
+     "lines": 3,
+     "size": 17,
+     "vw": 4.4,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": 0,
+     "leading": 1.2,
+     "top": 25,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "lines": 3,
+     "size": 17,
+     "font": "Inter"
+    },
+    "headings": [
+     {
+      "text": "0",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "left",
+      "widthRatio": 0.36,
+      "top": 879,
+      "tag": "div",
+      "kind": "heading"
+     },
+     {
+      "text": "-",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Inter",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1.2,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "right",
+      "widthRatio": 0.36,
+      "top": 879,
+      "tag": "div",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 2,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 2,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Inter",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      16,
+      17,
+      24
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Inter",
+      "size": 11,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 8.7
+     },
+     "measureChars": 61,
+     "max": {
+      "size": 24,
+      "vw": 6.2,
+      "font": "Inter",
+      "text": "0"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 11,
+     "microLabelShare": 0.089,
+     "microSamples": [
+      "Configuración",
+      "Permisos del rol",
+      "Procedimiento",
+      "Preparación / aseguramiento",
+      "Ciclo del EMP/EF",
+      "Acciones globales"
+     ],
+     "upperShare": 0.09,
+     "centerShare": 0.24,
+     "smallText": 42
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#ffffff",
+     "bodyBgHsl": {
+      "h": 0,
+      "s": 0,
+      "l": 1
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#080e1a",
+       "top": 152,
+       "hsl": {
+        "h": 220,
+        "s": 0.53,
+        "l": 0.07
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#e6edf7",
+       "share": 0.32
+      },
+      {
+       "color": "#9db0c9",
+       "share": 0.3
+      },
+      {
+       "color": "#cdd8ea",
+       "share": 0.09
+      },
+      {
+       "color": "#bccadb",
+       "share": 0.08
+      },
+      {
+       "color": "#c9d8ec",
+       "share": 0.07
+      }
+     ],
+     "button": {
+      "bg": "#07101e",
+      "hsl": {
+       "h": 217,
+       "s": 0.62,
+       "l": 0.07
+      },
+      "fg": "#e6edf7"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 31,
+     "inHero": 5,
+     "radius": 10,
+     "height": 37,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Manual",
+      "Editor docente",
+      "Marco normativo",
+      "Salvamento",
+      "Registro acceso"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 3,
+     "scrims": 0,
+     "gradientSamples": [
+      "div#root → radial-gradient(circle at 50% 0%, rgb(19, 33, 61), rgb(9, 17, 30) 60%, rgb(5, 10, 19))",
+      "div.metric → linear-gradient(rgb(10, 19, 34), rgb(11, 23, 41))",
+      "div.metric → linear-gradient(rgb(10, 19, 34), rgb(11, 23, 41))"
+     ],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 4,
+     "dashed": 0,
+     "blurred": 2,
+     "roundedBoxes": 4,
+     "boxRadius": 18,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 18,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 0,
+     "fixed": false,
+     "height": 128,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 3347,
+    "margins": {
+     "left": 27,
+     "right": 27
+    },
+    "sections": [
+     {
+      "sel": "header",
+      "tag": "header",
+      "top": 12,
+      "height": 128,
+      "words": 19,
+      "media": 0,
+      "middle": 43,
+      "heading": {
+       "text": "Simulador 3D de Investigación Judicial y Cadena de",
+       "size": 17,
+       "tag": "h1"
+      },
+      "left": 29,
+      "right": 42,
+      "textLeft": 29,
+      "textRight": 42,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.perm-list",
+      "tag": "div",
+      "top": 332,
+      "height": 284,
+      "words": 31,
+      "media": 0,
+      "middle": 56,
+      "heading": null,
+      "left": 36,
+      "right": 45,
+      "textLeft": 36,
+      "textRight": 45,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid2",
+      "tag": "div",
+      "top": 729,
+      "height": 127,
+      "words": 8,
+      "media": 0,
+      "middle": 8,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 60,
+      "textRight": 67,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.roadmap",
+      "tag": "div",
+      "top": 1015,
+      "height": 394,
+      "words": 33,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 27,
+      "right": 84,
+      "textLeft": 27,
+      "textRight": 84,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid2",
+      "tag": "div",
+      "top": 1485,
+      "height": 189,
+      "words": 17,
+      "media": 0,
+      "middle": 8,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 40,
+      "textRight": 41,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div.grid2",
+      "tag": "div",
+      "top": 1772,
+      "height": 217,
+      "words": 20,
+      "media": 0,
+      "middle": 8,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 52,
+      "textRight": 55,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "aside.panel.panel-right",
+      "tag": "aside",
+      "top": 2662,
+      "height": 674,
+      "words": 53,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": 27,
+      "right": 27,
+      "textLeft": 27,
+      "textRight": 49,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "main.scene-wrap",
+      "tag": "main",
+      "top": 2059,
+      "height": 591,
+      "words": 13,
+      "media": 1,
+      "middle": 4,
+      "heading": null,
+      "left": 0,
+      "right": 13,
+      "textLeft": -85,
+      "textRight": 119,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+      "size": 17,
+      "top": 25,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 29,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 1,
+    "bodySize": 11,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#ffffff",
+    "sidebar": null,
+    "topbar": null,
+    "canvas": {
+     "left": 27,
+     "right": 27
+    },
+    "hero": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "words": 9,
+     "chars": 59,
+     "lines": 3,
+     "size": 17,
+     "vw": 4.4,
+     "font": "Inter",
+     "weight": 700,
+     "tracking": 0,
+     "leading": 1.2,
+     "top": 25,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 4,
+     "firstScreen": 2,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 4,
+     "radii": [
+      [
+       18,
+       4
+      ]
+     ],
+     "heavyBorders": 4,
+     "borderSamples": [
+      "#30445f on #08111e (1.91:1)",
+      "#30445f on #080e1a (1.95:1)",
+      "#30445f on #080e1a (1.95:1)"
+     ],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0.57,
+     "tiny": 4,
+     "tinySamples": [
+      "Condicionado 10px",
+      "Condicionado 10px",
+      "Preparación / aseguramie 10px",
+      "Ciclo del EMP/EF 10px"
+     ],
+     "sizes": [
+      10,
+      11,
+      12,
+      13,
+      16,
+      17
+     ]
+    },
+    "title": {
+     "text": "Simulador 3D de Investigación Judicial y Cadena de Custodia",
+     "size": 17,
+     "top": 25
+    },
+    "colourShare": 0.005
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "micro-label",
+   "width": 1440,
+   "message": "11 tiny uppercase letter-spaced labels (e.g. \"Configuración\", \"Permisos del rol\", \"Procedimiento\", \"Preparación / aseguramiento\").",
+   "fix": "Use sentence-case text at a readable size, or delete the label.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "emoji",
+   "width": 1440,
+   "message": "Emoji in the page: 🔒",
+   "fix": "Remove. Use words or real imagery.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "gradient",
+   "width": 1440,
+   "message": "1 gradient fill(s): div#root → radial-gradient(circle at 50% 0%, rgb(19, 33, 61), rgb(9, 17, 30) 60%, rgb(5, 10, 19))",
+   "fix": "Use a flat colour or a real image. The only gradient allowed by default is a neutral scrim over a photo for legibility.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "heavy-shadow",
+   "width": 1440,
+   "message": "1 panel shadow(s) heavy enough to read as floating: rgba(0, 0, 0, 0.55) 0px 30px 120px 0px",
+   "fix": "Panels sit on the ground: separate them with a fill one step from the ground or a quiet 1px border. A shadow, if any, is under 8% black with a small blur. Real overlays (menus, dialogs, popovers) may float."
+  },
+  {
+   "level": "WARN",
+   "id": "heavy-borders",
+   "width": 1440,
+   "message": "6 panel borders are dark against their ground: #30445f on #080e1a (1.95:1) | #30445f on #080e1a (1.95:1) | #30445f on #ffffff (9.92:1)",
+   "fix": "A panel border is a whisper: about 1.1–1.3:1 against its ground on a light screen (#e5e7eb–#ededed on white), and about 1.2–1.5:1 on a dark one (#1a1a1a on #000, #2e2e2e on #111). Darker lines turn the screen into a grid of boxes; keep the stronger line for controls.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "tiny-text",
+   "width": 1440,
+   "message": "4 text blocks under 11px: Condicionado 10px, Condicionado 10px, Preparación / aseguramie 10px, Ciclo del EMP/EF 10px.",
+   "fix": "Nothing below 11px; secondary text 12px, data 13–14px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\Yeiner\\Downloads\\SIMULADOR CRIMEN\\.taste-skill\\before\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\Yeiner\\Downloads\\SIMULADOR CRIMEN\\.taste-skill\\before\\desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\Yeiner\\Downloads\\SIMULADOR CRIMEN\\.taste-skill\\before\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\Yeiner\\Downloads\\SIMULADOR CRIMEN\\.taste-skill\\before\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\Yeiner\\Downloads\\SIMULADOR CRIMEN\\.taste-skill\\before\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\Yeiner\\Downloads\\SIMULADOR CRIMEN\\.taste-skill\\before\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

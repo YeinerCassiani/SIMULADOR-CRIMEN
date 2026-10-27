@@ -1,40 +1,19 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, Lightformer, ContactShadows, Line, Stats, GizmoHelper, GizmoViewport } from '@react-three/drei';
+import { OrbitControls, Environment, Lightformer, ContactShadows, Stats, GizmoHelper, GizmoViewport } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
-import type { Dispatch } from 'react';
-import type { Action, SimState } from '../simulator';
 import { riskOfTool } from '../simulator';
-import { Room } from './Room';
+import type { SceneProps } from './contracts';
+import { SceneEnvironment } from './env/SceneEnvironment';
+import { ForensicLayer } from './forensic/ForensicLayer';
 import { Evidence } from './Evidence';
 import { Witnesses } from './Witnesses';
-
-// Acordonamiento perimetral y ruta de ingreso/salida, mostrados según las acciones globales.
-function Cordon({ w, d }: { w: number; d: number }) {
-  const mx = w / 2 + 0.7, mz = d / 2 + 0.7, y = 0.06;
-  const pts: [number, number, number][] = [
-    [-mx, y, -mz], [mx, y, -mz], [mx, y, mz], [-mx, y, mz], [-mx, y, -mz],
-  ];
-  return <Line points={pts} color="#f59e0b" lineWidth={2} dashed dashSize={0.5} gapSize={0.3} />;
-}
-
-function Route({ open }: { open: boolean }) {
-  const y = 0.08;
-  const pts: [number, number, number][] = open
-    ? [[-9, y, -7], [-6, y, -4], [-2, y, -2], [2, y, 0], [5, y, 3]]
-    : [[-6, y, -4], [-3, y, -1], [-1, y, 0], [2, y, 2.2]];
-  return <Line points={pts} color="#4ec1ff" lineWidth={2} dashed dashSize={0.3} gapSize={0.25} />;
-}
-
-interface Props {
-  state: SimState;
-  dispatch: Dispatch<Action>;
-}
 
 // Medición de rendimiento opt-in: añadir ?perf a la URL muestra el panel de FPS
 // (stats.js vía drei <Stats>). Desactivado por defecto para no consumir frame budget.
 const SHOW_PERF = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('perf');
 
-export function Scene({ state, dispatch }: Props) {
+export function Scene({ state, dispatch, view }: SceneProps) {
+  const tier = 'alta' as const;
   const { scenario, evidence, selectedEvidenceId, selectedTool } = state;
   const closed = scenario.environmentType === 'cerrado';
 
@@ -88,9 +67,8 @@ export function Scene({ state, dispatch }: Props) {
 
       {/* key por escenario: remontaje limpio al cambiar de escenario. */}
       <group key={scenario.scenarioId}>
-        <Room scenario={scenario} />
-        {state.globals.cordon && <Cordon w={scenario.dimensions.w} d={scenario.dimensions.d} />}
-        {state.globals.route && <Route open={scenario.environmentType !== 'cerrado'} />}
+        <SceneEnvironment scenario={scenario} tier={tier} forensicLight={view.forensicLight} />
+        <ForensicLayer state={state} view={view} tier={tier} />
         <ContactShadows position={[0, 0.02, 0]} opacity={0.4} scale={40} blur={2.5} far={6} />
 
         {scenario.evidenceItems.map((item) => (
@@ -100,6 +78,8 @@ export function Scene({ state, dispatch }: Props) {
             state={evidence[item.id]}
             selected={selectedEvidenceId === item.id}
             onSelect={handleSelect}
+            view={view}
+            tier={tier}
           />
         ))}
 

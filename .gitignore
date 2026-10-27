@@ -1,0 +1,5 @@
+
+# Herramientas de verificación
+.playwright-mcp/
+simulador-r3f/eval/shots/
+.taste-skill/**/*.jpg

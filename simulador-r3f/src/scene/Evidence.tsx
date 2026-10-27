@@ -1,17 +1,10 @@
 import { useState } from 'react';
 import { Html } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
-import type { EvidenceItem, EvidenceState } from '../types';
+import type { EvidenceProps } from './contracts';
 import { EvidenceModel } from './EvidenceModel';
 
-interface Props {
-  item: EvidenceItem;
-  state: EvidenceState;
-  selected: boolean;
-  onSelect: (id: string) => void;
-}
-
-export function Evidence({ item, state, selected, onSelect }: Props) {
+export function Evidence({ item, state, selected, onSelect }: EvidenceProps) {
   const [hovered, setHovered] = useState(false);
   const radius = Math.max(item.w, item.d) * 0.85;
 
