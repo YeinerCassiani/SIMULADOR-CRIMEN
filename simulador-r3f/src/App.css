@@ -525,3 +525,23 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
   .splash, .splash-bar-fill { transition: none; }
   .splash-tape-track { animation: none; }
 }
+
+/* ---------- Respuesta tras cada acción ---------- */
+.feedback {
+  position: relative; width: min(640px, 100%);
+  display: flex; flex-direction: column; gap: 6px; padding: 12px 44px 12px 14px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+  box-shadow: var(--shadow-float);
+}
+.fb-item { display: flex; align-items: flex-start; gap: 10px; margin: 0; font-size: 15px; line-height: 1.4; }
+.fb-item > svg { flex: none; margin-top: 1px; }
+.fb-item.log-good > svg { color: var(--positive); }
+.fb-item.log-bad > svg { color: var(--negative); }
+.fb-item.log-warn > svg { color: var(--warning); }
+.fb-item.log-info > svg { color: var(--muted); }
+.fb-msg { flex: 1; }
+.fb-pts { flex: none; font-weight: 700; }
+.fb-item.log-good .fb-pts { color: var(--positive); }
+.fb-item.log-bad .fb-pts { color: var(--negative); }
+.fb-item.log-warn .fb-pts { color: var(--warning); }
+.fb-close { position: absolute; top: 6px; right: 6px; }

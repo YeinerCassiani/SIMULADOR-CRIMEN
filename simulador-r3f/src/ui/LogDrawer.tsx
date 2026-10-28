@@ -4,9 +4,10 @@ import { fmtClock } from './logic';
 
 // Bitácora como cajón plegable al pie del inspector. La cabecera siempre visible
 // cuenta las entradas; el cuerpo es un role=log con la entrada más reciente arriba.
+// El reducer guarda la bitácora con la entrada más reciente en la posición 0.
 export function LogDrawer({ state, open, onToggle }: { state: SimState; open: boolean; onToggle: () => void }) {
   const n = state.log.length;
-  const last = state.log[n - 1];
+  const last = state.log[0];
   return (
     <section className={`drawer${open ? ' is-open' : ''}`} aria-label="Bitácora">
       <button type="button" className="drawer-head" aria-expanded={open} aria-controls="log-body" onClick={onToggle}>
@@ -17,7 +18,7 @@ export function LogDrawer({ state, open, onToggle }: { state: SimState; open: bo
       {!open && last && <p className={`drawer-last log-${last.type}`}>{last.message}</p>}
       <div id="log-body" className="log" role="log" aria-live="polite" hidden={!open}>
         {n === 0 && <p className="meta">Sin acciones todavía.</p>}
-        {[...state.log].reverse().map((l, i) => (
+        {state.log.map((l, i) => (
           <div key={n - i} className={`log-item log-${l.type}`}>
             <span className="log-time num">{fmtClock(l.time)}</span>
             <span className="log-msg">{l.message}</span>

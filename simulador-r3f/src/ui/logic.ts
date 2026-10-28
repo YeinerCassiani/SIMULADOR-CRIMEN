@@ -133,3 +133,26 @@ export function nextIndex(current: number, length: number, key: string): number 
   if (key === 'ArrowUp') return (current - 1 + length) % length;
   return current;
 }
+
+// --- Respuesta tras cada acción ---
+
+/** Identidad de una entrada de bitácora (hora ISO + mensaje). */
+export function logKey(l: { time: string; message: string } | undefined): string {
+  return l ? `${l.time}|${l.message}` : '';
+}
+
+/**
+ * Entradas nuevas desde la última que el usuario ya vio (la bitácora va con la más
+ * reciente en la posición 0). Si la vista no aparece (reinicio), todo es nuevo.
+ * Devuelve como máximo `max` entradas, la más reciente primero.
+ */
+export function freshEntries<T extends { time: string; message: string }>(log: readonly T[], seenKey: string, max = 3): T[] {
+  if (!log.length) return [];
+  const i = seenKey ? log.findIndex((l) => logKey(l) === seenKey) : -1;
+  return (i < 0 ? log : log.slice(0, i)).slice(0, max);
+}
+
+/** Texto de la entrada sin el prefijo de puntos ("+10 pts - "), que se muestra aparte. */
+export function stripPoints(message: string): string {
+  return message.replace(/^[+-]?\d+ pts - /, '');
+}

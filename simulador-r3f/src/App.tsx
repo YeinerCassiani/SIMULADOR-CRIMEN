@@ -13,6 +13,7 @@ import { SceneBoundary, SceneFailure } from './ui/SceneBoundary';
 import { Modals } from './ui/Modals';
 import { sceneView, shortcutFor } from './ui/logic';
 import { Splash } from './ui/Splash';
+import { ActionFeedback } from './ui/ActionFeedback';
 import { splashDisabled } from './ui/splashLogic';
 import './App.css';
 
@@ -108,6 +109,7 @@ export default function App() {
       />
 
       <div className="dock">
+        <ActionFeedback log={state.log} />
         <ProcedureStrip state={state} onDetail={() => { setPanel('procedimiento'); setInspectorOpen(true); }} />
         <ToolTray state={state} dispatch={dispatch} />
       </div>
