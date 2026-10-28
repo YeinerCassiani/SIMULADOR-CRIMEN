@@ -1,0 +1,329 @@
+{
+  "label": "before",
+  "url": "http://localhost:5199",
+  "date": "2026-10-27T23:20:47.570Z",
+  "browser": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "waitMs": 2500,
+  "fpsSampleMs": 3000,
+  "thresholds": {
+    "nearBlackLevel": 8,
+    "maxNearBlackFrac": 0.85,
+    "minStd": 12,
+    "maxConsoleErrors": 0,
+    "minCanvasPctBefore": 50,
+    "minCanvasPctAfter": 70,
+    "contrastGain": 1.3
+  },
+  "baseline": null,
+  "note": "FPS medido en Chrome headless con SwiftShader (GPU por software): se reporta, no se usa como umbral.",
+  "aggregate": {
+    "scenarios": 4,
+    "pass": false,
+    "failedChecks": [
+      "0:area-canvas",
+      "1:area-canvas",
+      "2:area-canvas",
+      "3:area-canvas"
+    ],
+    "meanLuminance": 78.82,
+    "meanStd": 44.16,
+    "meanNearBlackFrac": 0.01,
+    "meanCanvasPct": 49.07,
+    "meanFps": 0.6,
+    "totalConsoleErrors": 0
+  },
+  "scenarios": [
+    {
+      "index": 0,
+      "title": "Apartamento urbano - posible homicidio simulado",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 345,
+        "y": 93,
+        "width": 890,
+        "height": 794
+      },
+      "canvasPct": 49.07,
+      "stats": {
+        "mean": 72.08,
+        "std": 45.69,
+        "nearBlackFrac": 0.0259,
+        "pixels": 353330
+      },
+      "fps": 0.6,
+      "switchBackStats": {
+        "mean": 72.1,
+        "std": 45.69,
+        "nearBlackFrac": 0.0259,
+        "pixels": 353330
+      },
+      "forensic": {
+        "method": "tecla-L",
+        "available": false,
+        "changed": false,
+        "stats": {
+          "mean": 72.09,
+          "std": 45.68,
+          "nearBlackFrac": 0.0259,
+          "pixels": 353330
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.0259,
+            "std": 45.69
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.0259,
+            "std": 45.69
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": false,
+          "value": 49.07,
+          "threshold": ">= 50%"
+        }
+      ],
+      "pass": false
+    },
+    {
+      "index": 1,
+      "title": "Parque público - posible hurto con lesiones simulado",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 345,
+        "y": 93,
+        "width": 890,
+        "height": 794
+      },
+      "canvasPct": 49.07,
+      "stats": {
+        "mean": 88.53,
+        "std": 42.2,
+        "nearBlackFrac": 0,
+        "pixels": 353330
+      },
+      "fps": 0.3,
+      "switchBackStats": {
+        "mean": 88.54,
+        "std": 42.18,
+        "nearBlackFrac": 0,
+        "pixels": 353330
+      },
+      "forensic": {
+        "method": "tecla-L",
+        "available": false,
+        "changed": false,
+        "stats": {
+          "mean": 88.53,
+          "std": 42.16,
+          "nearBlackFrac": 0,
+          "pixels": 353330
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0,
+            "std": 42.2
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0,
+            "std": 42.18
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": false,
+          "value": 49.07,
+          "threshold": ">= 50%"
+        }
+      ],
+      "pass": false
+    },
+    {
+      "index": 2,
+      "title": "Vivienda - violencia intrafamiliar con menor (NNA)",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 345,
+        "y": 93,
+        "width": 890,
+        "height": 794
+      },
+      "canvasPct": 49.07,
+      "stats": {
+        "mean": 70.57,
+        "std": 44.7,
+        "nearBlackFrac": 0.0245,
+        "pixels": 353330
+      },
+      "fps": 1.1,
+      "switchBackStats": {
+        "mean": 70.58,
+        "std": 44.69,
+        "nearBlackFrac": 0.0245,
+        "pixels": 353330
+      },
+      "forensic": {
+        "method": "tecla-L",
+        "available": false,
+        "changed": false,
+        "stats": {
+          "mean": 70.56,
+          "std": 44.71,
+          "nearBlackFrac": 0.0245,
+          "pixels": 353330
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.0245,
+            "std": 44.7
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.0245,
+            "std": 44.69
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": false,
+          "value": 49.07,
+          "threshold": ">= 50%"
+        }
+      ],
+      "pass": false
+    },
+    {
+      "index": 3,
+      "title": "Vía pública - siniestro vial con lesionados",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 345,
+        "y": 93,
+        "width": 890,
+        "height": 794
+      },
+      "canvasPct": 49.07,
+      "stats": {
+        "mean": 84.09,
+        "std": 44.04,
+        "nearBlackFrac": 0,
+        "pixels": 353330
+      },
+      "fps": 0.4,
+      "switchBackStats": {
+        "mean": 84.09,
+        "std": 44.04,
+        "nearBlackFrac": 0,
+        "pixels": 353330
+      },
+      "forensic": {
+        "method": "tecla-L",
+        "available": false,
+        "changed": false,
+        "stats": {
+          "mean": 84.12,
+          "std": 44.07,
+          "nearBlackFrac": 0,
+          "pixels": 353330
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0,
+            "std": 44.04
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0,
+            "std": 44.04
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": false,
+          "value": 49.07,
+          "threshold": ">= 50%"
+        }
+      ],
+      "pass": false
+    }
+  ]
+}

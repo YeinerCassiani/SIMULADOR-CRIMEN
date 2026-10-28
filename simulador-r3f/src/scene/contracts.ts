@@ -43,6 +43,18 @@ export interface EvidenceProps {
   tier: QualityTier;
 }
 
+/**
+ * Testigos (maniquíes + etiqueta + acciones). Dueño: scene/forensic (Witnesses.tsx);
+ * lo monta Scene.tsx. `view`/`tier` opcionales: sin `view` se usa DEFAULT_VIEW y las
+ * etiquetas se ocultan igual con un modal abierto (se lee `state.modal`).
+ */
+export interface WitnessesProps {
+  state: SimState;
+  dispatch: Dispatch<Action>;
+  view?: ViewSettings;
+  tier?: QualityTier;
+}
+
 /** Ambiente (arquitectura + mobiliario + exterior). Dueño: scene/env. */
 export interface EnvironmentProps {
   scenario: Scenario;

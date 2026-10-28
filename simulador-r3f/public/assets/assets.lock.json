@@ -1,0 +1,221 @@
+{
+  "hdri:small_empty_room_2": {
+    "sig": "6ef5a8c89ec36091cbc1547e5e5c96b7"
+  },
+  "hdri:street_lamp": {
+    "sig": "ee2092411457ca1953b0937456d27f45"
+  },
+  "model:ArmChair_01": {
+    "sig": "d6f8c7c82eef564cd55fd07b48de6636",
+    "resized": false
+  },
+  "model:ClassicNightstand_01": {
+    "sig": "f9415539ab3f084d53c65989a95e9a6b",
+    "resized": false
+  },
+  "model:GothicBed_01": {
+    "sig": "b69f0dbddb8956de14945ee8d1194f93",
+    "resized": false
+  },
+  "model:Sofa_01": {
+    "sig": "5729912ccd34c40d0868a175a201a124",
+    "resized": false
+  },
+  "model:Television_01": {
+    "sig": "b6927c30fe3123fd0dd62da2819ceced",
+    "resized": false
+  },
+  "model:baseball_bat": {
+    "sig": "cf5dc8286fbdb365698d01204fe7b635",
+    "resized": true
+  },
+  "model:cardboard_box_01": {
+    "sig": "1e5573ef35a825b6775d9047ec9ab462",
+    "resized": false
+  },
+  "model:cigarette_pack": {
+    "sig": "698f88a5231e63361c47fe3438f354c2",
+    "resized": true
+  },
+  "model:clipboard": {
+    "sig": "7e6201634ffd7d6252f8e2df6db0f6a3",
+    "resized": true
+  },
+  "model:concrete_road_barrier": {
+    "sig": "9398b28fc7f01bdafbc6da08d5319958",
+    "resized": false
+  },
+  "model:covered_car": {
+    "sig": "546593ad3aa2321db2fa371213290b8f",
+    "resized": false
+  },
+  "model:dining_chair_02": {
+    "sig": "3602648ce2aad65f52a3a19f343eb95e",
+    "resized": false
+  },
+  "model:dining_table": {
+    "sig": "3c41c3e215d618883b1283cbce577285",
+    "resized": false
+  },
+  "model:drawer_cabinet": {
+    "sig": "ee6fb5676101cd64da764203c6cac72a",
+    "resized": false
+  },
+  "model:electric_stove": {
+    "sig": "f7b03cd59e520a17ba8187ae9af46294",
+    "resized": false
+  },
+  "model:fire_hydrant": {
+    "sig": "35804a57aec209d1a47c547be029427a",
+    "resized": false
+  },
+  "model:fish_knife": {
+    "sig": "b13809f95be6814bbdb34e9bcf368b8e",
+    "resized": true
+  },
+  "model:hanging_picture_frame_01": {
+    "sig": "1b62b826d9cd02c457263132bb214aef",
+    "resized": false
+  },
+  "model:magnifying_glass_01": {
+    "sig": "083ea15e64970dd74bff125530861dc9",
+    "resized": true
+  },
+  "model:metal_trash_can": {
+    "sig": "14d6909c479aa23d0d595ab133263574",
+    "resized": false
+  },
+  "model:modern_ceiling_lamp_01": {
+    "sig": "57bbb4b0a123031e2ad3d943edfce783",
+    "resized": false
+  },
+  "model:modern_coffee_table_01": {
+    "sig": "4f888c11c6dd58b3fc154daaeab90075",
+    "resized": false
+  },
+  "model:modern_wooden_cabinet": {
+    "sig": "ef32ff979914d35bc276e4443183019d",
+    "resized": false
+  },
+  "model:painted_wooden_bench": {
+    "sig": "6ed8fc025703f63c9d425e91fe6d9aa0",
+    "resized": false
+  },
+  "model:potted_plant_02": {
+    "sig": "d5b614e43b5bd472bff02d4a8614d5ad",
+    "resized": false
+  },
+  "model:rollershutter_door": {
+    "sig": "8dfd1d21a697486671ec1b7d765df647",
+    "resized": false
+  },
+  "model:service_pistol": {
+    "sig": "443ee7a98fba3721982c7ef15026dd2c",
+    "resized": true
+  },
+  "model:side_table_01": {
+    "sig": "670f2099d144e3ee86c32fcfbf1570b9",
+    "resized": false
+  },
+  "model:sofa_02": {
+    "sig": "77378f9434df40205fb068bcda1942ba",
+    "resized": false
+  },
+  "model:street_lamp_01": {
+    "sig": "a008c648599bd3dee9d14ff34767acb1",
+    "resized": false
+  },
+  "model:throw_pillows_01": {
+    "sig": "e01f4e21878f82f80de1232311ab006e",
+    "resized": false
+  },
+  "model:trashbag": {
+    "sig": "26c088b2a12437c37cc6f46079940e0c",
+    "resized": false
+  },
+  "model:utility_box_02": {
+    "sig": "1a8c5f933c20d86115966faf9e6718a2",
+    "resized": false
+  },
+  "texture:asphalt_02:arm": {
+    "sig": "8c56d0ca72ac5f8de35615c1d9358499"
+  },
+  "texture:asphalt_02:diff": {
+    "sig": "abfa0d6595881f42b88837a390216556"
+  },
+  "texture:asphalt_02:nor_gl": {
+    "sig": "30cc94d7ddf3f371e12dc8385275b7cc"
+  },
+  "texture:dark_wood:arm": {
+    "sig": "1f31d9923553d8caa8c635e4d17f400d"
+  },
+  "texture:dark_wood:diff": {
+    "sig": "7e8c4ac491fe2aa1213a8c3e646100d2"
+  },
+  "texture:dark_wood:nor_gl": {
+    "sig": "f7a3fc75361cdd5e1ef7392a296fb3a7"
+  },
+  "texture:forest_ground_05:arm": {
+    "sig": "fa1c2da2ddf805a0a64833b6431c7184"
+  },
+  "texture:forest_ground_05:diff": {
+    "sig": "384235dcc41b1c6e597d1656ea56b618"
+  },
+  "texture:forest_ground_05:nor_gl": {
+    "sig": "127be58f1cf2b892963b83996b8c872c"
+  },
+  "texture:pavement_02:arm": {
+    "sig": "4acdbdbcfe17f884fb3c9c27cee66630"
+  },
+  "texture:pavement_02:diff": {
+    "sig": "843fdf3ab1f28adc57cc70136d33b3fa"
+  },
+  "texture:pavement_02:nor_gl": {
+    "sig": "d7e883ac775143a1c09a72761a923a26"
+  },
+  "texture:red_brick:arm": {
+    "sig": "cfcab161075b6baabd5ada02aa84a36e"
+  },
+  "texture:red_brick:diff": {
+    "sig": "d328e0f64d75d7297a1bb2beec682dbe"
+  },
+  "texture:red_brick:nor_gl": {
+    "sig": "36f4892f7634f744488a68dbf3e90352"
+  },
+  "texture:sparse_grass:arm": {
+    "sig": "621b1e1b441fba6924381e8ea10b9a7f"
+  },
+  "texture:sparse_grass:diff": {
+    "sig": "20937a6f714f880a90f5ad4404c0393a"
+  },
+  "texture:sparse_grass:nor_gl": {
+    "sig": "2f4612849769657d794bc9f8defde580"
+  },
+  "texture:terracotta_floor_tiles:arm": {
+    "sig": "74eefd988c6d331502207a251d2baed1"
+  },
+  "texture:terracotta_floor_tiles:diff": {
+    "sig": "59a9ef634649a719a468d90298ea5d78"
+  },
+  "texture:terracotta_floor_tiles:nor_gl": {
+    "sig": "289c6316de18a07cca5c0a6d76e72fd4"
+  },
+  "texture:white_plaster_02:arm": {
+    "sig": "3ea1dae54878daca06e1ab54978ebeae"
+  },
+  "texture:white_plaster_02:diff": {
+    "sig": "2a2a0ec11baea74a47b3a0d915ae4314"
+  },
+  "texture:white_plaster_02:nor_gl": {
+    "sig": "a2436098c517478d44b38e95819f4096"
+  },
+  "texture:wood_floor:arm": {
+    "sig": "43bcf55c1b86c58173f6fdbc280c876f"
+  },
+  "texture:wood_floor:diff": {
+    "sig": "9f5b73b405b6adcb28b6a93e9c81b1fb"
+  },
+  "texture:wood_floor:nor_gl": {
+    "sig": "1d2b86d4e48b8448a95097c05b8e5108"
+  }
+}

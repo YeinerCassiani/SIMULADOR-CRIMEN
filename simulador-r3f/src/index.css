@@ -1,13 +1,42 @@
+/* Public Sans autoalojada (offline): @fontsource-variable empaqueta los woff2 con Vite. */
+@import '@fontsource-variable/public-sans';
+
+/* Tokens de la consola forense (taste-skill app 'data-terminal', seed 1713392538).
+   El acento es el amarillo de la placa numerada de criminalística: la única marca de
+   selección (línea de 1px del ancho de la etiqueta). Texto sobre el acento: siempre
+   --accent-ink (#131217, 11:1); el blanco sobre #f2c230 da 1.7:1. */
 :root {
-  --bg: #070d17;
-  --panel: rgba(8, 14, 26, 0.92);
-  --line: #30445f;
-  --text: #e6edf7;
-  --muted: #9db0c9;
-  --accent: #4ec1ff;
-  --good: #22c55e;
-  --bad: #ef4444;
-  --warn: #f59e0b;
+  --ground: #171719;
+  --surface: #131217;
+  --raised: #212023;
+  --border: #222224;
+  --rule: #1b1a1f;
+  --control: #3a3a3e;
+  --text: #ffffff;
+  --muted: #8a8c92;
+  --accent: #f2c230;
+  --accent-ink: #131217;
+  --positive: #44a282;
+  --negative: #e5566f;
+  --warning: #d9a441;
+  --pill-positive-bg: #1b2828;
+  --pill-negative-bg: #2c1a20;
+  --pill-warning-bg: #2a2416;
+  --scrim: rgba(0, 0, 0, 0.6);
+  --shadow-float: 0 12px 28px rgba(0, 0, 0, 0.4);
+
+  --radius-card: 6px;
+  --radius-control: 999px;
+  --font: 'Public Sans Variable', 'Public Sans', system-ui, 'Segoe UI', sans-serif;
+  --fs-title: 20px;
+  --fs-h1: 18px;
+  --fs-section: 14px;
+  --fs-body: 13px;
+  --fs-small: 12px;
+  --control-height: 34px;
+  --rail-w: 56px;
+  --top-h: 56px;
+  --insp-w: 360px;
   color-scheme: dark;
 }
 
@@ -16,7 +45,32 @@
 html, body, #root {
   margin: 0;
   height: 100%;
-  background: radial-gradient(circle at top, #13213d, #09111e 60%, #050a13);
+}
+
+body {
+  background: var(--ground);
   color: var(--text);
-  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* Todo número en cifras tabulares. */
+.num, [role='timer'], table td, dd { font-variant-numeric: tabular-nums; }
+
+h1, h2, h3, p { margin: 0; }
+
+button, select, input, textarea { font: inherit; color: inherit; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }

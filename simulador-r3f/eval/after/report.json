@@ -1,0 +1,412 @@
+{
+  "label": "after",
+  "url": "http://localhost:5199",
+  "date": "2026-10-28T01:55:23.062Z",
+  "browser": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "gl": "gpu",
+  "glRenderer": "ANGLE (AMD, AMD Radeon(TM) RX Vega 11 Graphics (0x000015DD) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "waitMs": 2500,
+  "fpsSampleMs": 3000,
+  "thresholds": {
+    "nearBlackLevel": 8,
+    "maxNearBlackFrac": 0.85,
+    "minStd": 12,
+    "maxConsoleErrors": 0,
+    "minCanvasPctBefore": 50,
+    "minCanvasPctAfter": 70,
+    "contrastGain": 1.3
+  },
+  "baseline": "eval\\before\\report.json",
+  "note": "FPS headless se reporta, no se usa como umbral (con --gl swiftshader es GPU por software).",
+  "aggregate": {
+    "scenarios": 4,
+    "pass": false,
+    "failedChecks": [
+      "2:contraste-vs-base"
+    ],
+    "meanLuminance": 55.66,
+    "meanStd": 56.5,
+    "meanNearBlackFrac": 0.29,
+    "meanCanvasPct": 100,
+    "meanFps": 43.13,
+    "totalConsoleErrors": 0
+  },
+  "scenarios": [
+    {
+      "index": 0,
+      "title": "Apartamento urbano - posible homicidio simulado",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 900
+      },
+      "canvasPct": 100,
+      "glRenderer": "ANGLE (AMD, AMD Radeon(TM) RX Vega 11 Graphics (0x000015DD) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneRect": {
+        "x": 56,
+        "y": 59,
+        "width": 1184,
+        "height": 694
+      },
+      "stats": {
+        "mean": 68.55,
+        "std": 61.91,
+        "nearBlackFrac": 0.2593,
+        "pixels": 410848
+      },
+      "fps": 48.1,
+      "perf": {
+        "tier": "alta",
+        "dpr": 1,
+        "calls": 552,
+        "triangles": 744156,
+        "programs": 45,
+        "fps": 46
+      },
+      "switchBackStats": {
+        "mean": 68.54,
+        "std": 61.92,
+        "nearBlackFrac": 0.2595,
+        "pixels": 410848
+      },
+      "forensic": {
+        "method": "control",
+        "available": true,
+        "changed": true,
+        "stats": {
+          "mean": 17.9,
+          "std": 25.37,
+          "nearBlackFrac": 0.5382,
+          "pixels": 410848
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.2593,
+            "std": 61.91
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.2595,
+            "std": 61.92
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": true,
+          "value": 100,
+          "threshold": ">= 70%"
+        },
+        {
+          "id": "contraste-vs-base",
+          "pass": true,
+          "value": 61.91,
+          "threshold": ">= 59.33 (1.3x base 45.64)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "index": 1,
+      "title": "Parque público - posible hurto con lesiones simulado",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 900
+      },
+      "canvasPct": 100,
+      "glRenderer": "ANGLE (AMD, AMD Radeon(TM) RX Vega 11 Graphics (0x000015DD) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneRect": {
+        "x": 56,
+        "y": 59,
+        "width": 1184,
+        "height": 694
+      },
+      "stats": {
+        "mean": 50.32,
+        "std": 55.55,
+        "nearBlackFrac": 0.2686,
+        "pixels": 410848
+      },
+      "fps": 43.7,
+      "perf": {
+        "tier": "media",
+        "dpr": 1.25,
+        "calls": 427,
+        "triangles": 562982,
+        "programs": 61,
+        "fps": 42
+      },
+      "switchBackStats": {
+        "mean": 49.8,
+        "std": 55.11,
+        "nearBlackFrac": 0.2663,
+        "pixels": 410848
+      },
+      "forensic": {
+        "method": "control",
+        "available": true,
+        "changed": true,
+        "stats": {
+          "mean": 12.35,
+          "std": 19.99,
+          "nearBlackFrac": 0.6274,
+          "pixels": 410848
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.2686,
+            "std": 55.55
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.2663,
+            "std": 55.11
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": true,
+          "value": 100,
+          "threshold": ">= 70%"
+        },
+        {
+          "id": "contraste-vs-base",
+          "pass": true,
+          "value": 55.55,
+          "threshold": ">= 54.8 (1.3x base 42.15)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "index": 2,
+      "title": "Vivienda - violencia intrafamiliar con menor (NNA)",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 900
+      },
+      "canvasPct": 100,
+      "glRenderer": "ANGLE (AMD, AMD Radeon(TM) RX Vega 11 Graphics (0x000015DD) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneRect": {
+        "x": 56,
+        "y": 59,
+        "width": 1184,
+        "height": 694
+      },
+      "stats": {
+        "mean": 51.03,
+        "std": 48.68,
+        "nearBlackFrac": 0.2595,
+        "pixels": 410848
+      },
+      "fps": 38.7,
+      "perf": {
+        "tier": "media",
+        "dpr": 1.25,
+        "calls": 593,
+        "triangles": 731126,
+        "programs": 58,
+        "fps": 41
+      },
+      "switchBackStats": {
+        "mean": 51.03,
+        "std": 48.68,
+        "nearBlackFrac": 0.2595,
+        "pixels": 410848
+      },
+      "forensic": {
+        "method": "control",
+        "available": true,
+        "changed": true,
+        "stats": {
+          "mean": 11.14,
+          "std": 19.06,
+          "nearBlackFrac": 0.6424,
+          "pixels": 410848
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.2595,
+            "std": 48.68
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.2595,
+            "std": 48.68
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": true,
+          "value": 100,
+          "threshold": ">= 70%"
+        },
+        {
+          "id": "contraste-vs-base",
+          "pass": false,
+          "value": 48.68,
+          "threshold": ">= 58.05 (1.3x base 44.65)"
+        }
+      ],
+      "pass": false
+    },
+    {
+      "index": 3,
+      "title": "Vía pública - siniestro vial con lesionados",
+      "manualClosed": true,
+      "selectStrategy": "select",
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1600,
+        "height": 900
+      },
+      "canvasPct": 100,
+      "glRenderer": "ANGLE (AMD, AMD Radeon(TM) RX Vega 11 Graphics (0x000015DD) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneRect": {
+        "x": 56,
+        "y": 59,
+        "width": 1184,
+        "height": 694
+      },
+      "stats": {
+        "mean": 52.74,
+        "std": 59.86,
+        "nearBlackFrac": 0.3658,
+        "pixels": 410848
+      },
+      "fps": 42,
+      "perf": {
+        "tier": "media",
+        "dpr": 1.25,
+        "calls": 725,
+        "triangles": 669930,
+        "programs": 65,
+        "fps": 46
+      },
+      "switchBackStats": {
+        "mean": 52.74,
+        "std": 59.86,
+        "nearBlackFrac": 0.3658,
+        "pixels": 410848
+      },
+      "forensic": {
+        "method": "control",
+        "available": true,
+        "changed": true,
+        "stats": {
+          "mean": 15.27,
+          "std": 25.66,
+          "nearBlackFrac": 0.5565,
+          "pixels": 410848
+        }
+      },
+      "consoleErrors": 0,
+      "consoleMessages": [],
+      "checks": [
+        {
+          "id": "no-negro",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.3658,
+            "std": 59.86
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "no-negro-tras-cambio",
+          "pass": true,
+          "value": {
+            "nearBlackFrac": 0.3658,
+            "std": 59.86
+          },
+          "threshold": "nearBlackFrac < 0.85 y std > 12"
+        },
+        {
+          "id": "errores-consola",
+          "pass": true,
+          "value": 0,
+          "threshold": "<= 0"
+        },
+        {
+          "id": "area-canvas",
+          "pass": true,
+          "value": 100,
+          "threshold": ">= 70%"
+        },
+        {
+          "id": "contraste-vs-base",
+          "pass": true,
+          "value": 59.86,
+          "threshold": ">= 57.21 (1.3x base 44.01)"
+        }
+      ],
+      "pass": true
+    }
+  ]
+}
