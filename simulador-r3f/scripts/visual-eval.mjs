@@ -65,6 +65,20 @@ function scenarioTitles() {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /** Cierra el modal "Manual" si está abierto: botón cuyo texto empieza con "Entendido". */
+/**
+ * Pantalla de bienvenida: espera a que "Entrar" se habilite (carga real terminada),
+ * guarda la traza window.__splash (readyMs, items, errores) y entra. Las versiones
+ * sin bienvenida (línea base) devuelven null sin esperar.
+ */
+async function passSplash(page) {
+  if (!(await page.$('[data-splash-enter]'))) return null;
+  await page.waitForSelector('[data-splash-enter]:not([disabled])', { timeout: 45000 });
+  const trace = await page.evaluate(() => window.__splash ?? null);
+  await page.click('[data-splash-enter]');
+  await page.waitForFunction(() => !document.querySelector('[data-splash-enter]'), { timeout: 5000 });
+  return trace;
+}
+
 async function closeManual(page) {
   return page.evaluate(() => {
     const btn = [...document.querySelectorAll('button')].find((b) => /^\s*entendido/i.test(b.textContent || ''));
@@ -202,6 +216,7 @@ async function evalScenario(browser, args, index, titles, shotsDir) {
     await page.goto(args.url, { waitUntil: 'load', timeout: 90000 });
     await page.waitForSelector('canvas', { timeout: 30000 });
     await sleep(500);
+    r.splash = await passSplash(page);
     r.manualClosed = await closeManual(page);
     r.selectStrategy = await selectScenario(page, titles[index], titles);
     if (!r.selectStrategy) throw new Error('no se pudo seleccionar el escenario');

@@ -468,3 +468,60 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
     .rail { height: var(--nav-h); padding-bottom: env(safe-area-inset-bottom); }
   }
 }
+
+/* ---------- Pantalla de bienvenida ----------
+   Opaca sobre toda la app (la escena carga detrás). Una sola pieza dominante: la
+   placa; debajo título, carga y acción. La cinta de cordón cruza el pie. */
+.splash {
+  position: fixed; inset: 0; z-index: 1000;
+  display: grid; place-items: center; overflow: hidden;
+  background: var(--ground); color: var(--text);
+  transition: opacity 0.28s ease-out;
+  outline: none;
+}
+.splash.is-leaving { opacity: 0; pointer-events: none; }
+.splash-body {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  width: min(640px, calc(100vw - 32px)); padding-bottom: 72px;
+}
+.splash-logo { display: block; margin-bottom: 20px; }
+.splash-title { margin: 0; text-wrap: balance; font-size: clamp(26px, 4.4vw, 36px); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
+.splash-sub { margin: 10px 0 0; text-wrap: balance; font-size: 16px; line-height: 1.45; }
+.splash-meta { margin: 6px 0 0; font-size: var(--fs-small); color: var(--muted); }
+
+.splash-load { width: min(480px, 100%); margin-top: 36px; }
+.splash-bar { height: 4px; background: var(--raised); border-radius: 2px; overflow: hidden; }
+.splash-bar-fill {
+  height: 100%; background: var(--accent); transform-origin: left center;
+  transition: transform 0.2s ease-out;
+}
+.splash-status {
+  display: flex; justify-content: space-between; gap: 12px; margin-top: 10px;
+  font-size: var(--fs-small); color: var(--muted); text-align: left;
+}
+.splash-pct { color: var(--text); font-variant-numeric: tabular-nums; }
+.splash-note { margin: 8px 0 0; font-size: var(--fs-small); color: var(--warning); text-align: left; }
+.splash-enter { margin-top: 28px; height: 44px; padding: 0 22px; font-size: 15px; }
+
+.splash-tape {
+  position: absolute; left: -5vw; right: -5vw; bottom: 44px;
+  transform: rotate(-2.5deg);
+  background: var(--accent); color: var(--accent-ink);
+  height: 30px; overflow: hidden; white-space: nowrap;
+}
+.splash-tape-track {
+  display: inline-block; font: 800 13px/30px var(--font); letter-spacing: 0.14em;
+  animation: splash-tape 40s linear infinite;
+}
+@keyframes splash-tape { to { transform: translateX(-50%); } }
+.splash-credit { position: absolute; bottom: 8px; margin: 0; font-size: var(--fs-small); color: var(--muted); }
+
+@media (max-height: 640px) {
+  .splash-logo { width: 112px; height: 112px; margin-bottom: 12px; }
+  .splash-load { margin-top: 20px; }
+  .splash-enter { margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash, .splash-bar-fill { transition: none; }
+  .splash-tape-track { animation: none; }
+}

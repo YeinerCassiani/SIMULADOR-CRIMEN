@@ -32,7 +32,7 @@ Código de salida: 0 si todo pasa, 1 si falla algún umbral, 2 si el harness rev
 
 Cada escenario se evalúa en un contexto de navegador nuevo (localStorage limpio), viewport 1600×900.
 
-1. Carga, cierra el modal "Manual", selecciona el escenario, espera `--wait`.
+1. Carga; si hay pantalla de bienvenida espera a que "Entrar" se habilite (tope 45 s), guarda `window.__splash` en `splash` (`readyMs`: ms hasta escena lista, `items`: recursos cargados, `errors`: recursos que fallaron) y entra. Luego cierra el modal "Manual", selecciona el escenario, espera `--wait`.
 2. Espera a que la red quede inactiva (`waitForNetworkIdle`, 800 ms, tope 30 s): los `.glb`, texturas y HDRI del escenario tienen que haber llegado, si no la captura cae en un cuadro a medio cargar.
    Captura con `page.screenshot` recortado al **rect de escena libre** (`freeSceneRect`): el canvas menos `.rail`, `.topbar`, `.inspector` y `.dock`. Con el visor a pantalla completa (≥ 70 % del viewport) el canvas queda debajo de paneles opacos; medir la luminancia sobre ellos mediría la UI, no la escena. La base (`before`) ya era un canvas sin UI encima, así que la comparación de contraste es justa con este recorte. No depende de `preserveDrawingBuffer` e incluye las etiquetas HTML que se dibujan sobre la escena. Archivo `s<i>.png`. El `area-canvas` se sigue midiendo sobre el canvas completo.
 3. Luminancia Rec.709 sobre sRGB (0..255): media, desviación estándar, fracción de píxeles casi negros (< 8/255). PNG decodificado con `zlib` de Node (`scripts/visual-eval-lib.mjs`, sin dependencias).
@@ -55,6 +55,7 @@ Cada escenario se evalúa en un contexto de navegador nuevo (localStorage limpio
 
 | Control | Estrategia |
 |---|---|
+| Bienvenida | `[data-splash-enter]` (atributo estable, no clase); habilitado = carga lista |
 | Modal manual | primer `<button>` cuyo texto empieza con "Entendido" |
 | Escenario | 1) `<select>` con ≥ 2 opciones cuyo texto es un título de escenario (títulos leídos de `src/data/scenarios.ts` con regex `title: '...'`), se usa `elementHandle.select()` que dispara `change`; 2) si no hay select: primer `[role=option|radio|tab|menuitem|menuitemradio]`, `button` o `a` cuyo texto o aria-label contiene el título |
 | Canvas 3D | el `<canvas>` de mayor área |

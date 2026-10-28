@@ -3,3 +3,6 @@
 .playwright-mcp/
 simulador-r3f/eval/shots/
 .taste-skill/**/*.jpg
+
+# Local Netlify folder
+.netlify

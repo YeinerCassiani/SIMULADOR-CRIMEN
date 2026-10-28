@@ -1,7 +1,7 @@
 {
   "label": "after",
   "url": "http://localhost:5199",
-  "date": "2026-10-28T01:55:23.062Z",
+  "date": "2026-10-28T14:38:31.424Z",
   "browser": "C:/Program Files/Google/Chrome/Application/chrome.exe",
   "gl": "gpu",
   "glRenderer": "ANGLE (AMD, AMD Radeon(TM) RX Vega 11 Graphics (0x000015DD) Direct3D11 vs_5_0 ps_5_0, D3D11)",
@@ -28,17 +28,23 @@
     "failedChecks": [
       "2:contraste-vs-base"
     ],
-    "meanLuminance": 55.66,
-    "meanStd": 56.5,
+    "meanLuminance": 55.37,
+    "meanStd": 56.36,
     "meanNearBlackFrac": 0.29,
     "meanCanvasPct": 100,
-    "meanFps": 43.13,
+    "meanFps": 30.15,
     "totalConsoleErrors": 0
   },
   "scenarios": [
     {
       "index": 0,
       "title": "Apartamento urbano - posible homicidio simulado",
+      "splash": {
+        "status": "ready",
+        "readyMs": 29520,
+        "items": 83,
+        "errors": 0
+      },
       "manualClosed": true,
       "selectStrategy": "select",
       "canvasRect": {
@@ -61,14 +67,14 @@
         "nearBlackFrac": 0.2593,
         "pixels": 410848
       },
-      "fps": 48.1,
+      "fps": 41.8,
       "perf": {
         "tier": "alta",
         "dpr": 1,
         "calls": 552,
         "triangles": 744156,
         "programs": 45,
-        "fps": 46
+        "fps": 41
       },
       "switchBackStats": {
         "mean": 68.54,
@@ -132,6 +138,12 @@
     {
       "index": 1,
       "title": "Parque público - posible hurto con lesiones simulado",
+      "splash": {
+        "status": "ready",
+        "readyMs": 5506,
+        "items": 83,
+        "errors": 0
+      },
       "manualClosed": true,
       "selectStrategy": "select",
       "canvasRect": {
@@ -149,19 +161,19 @@
         "height": 694
       },
       "stats": {
-        "mean": 50.32,
-        "std": 55.55,
-        "nearBlackFrac": 0.2686,
+        "mean": 49.15,
+        "std": 55,
+        "nearBlackFrac": 0.2699,
         "pixels": 410848
       },
-      "fps": 43.7,
+      "fps": 34.8,
       "perf": {
         "tier": "media",
         "dpr": 1.25,
         "calls": 427,
         "triangles": 562982,
-        "programs": 61,
-        "fps": 42
+        "programs": 63,
+        "fps": 39
       },
       "switchBackStats": {
         "mean": 49.8,
@@ -187,8 +199,8 @@
           "id": "no-negro",
           "pass": true,
           "value": {
-            "nearBlackFrac": 0.2686,
-            "std": 55.55
+            "nearBlackFrac": 0.2699,
+            "std": 55
           },
           "threshold": "nearBlackFrac < 0.85 y std > 12"
         },
@@ -216,7 +228,7 @@
         {
           "id": "contraste-vs-base",
           "pass": true,
-          "value": 55.55,
+          "value": 55,
           "threshold": ">= 54.8 (1.3x base 42.15)"
         }
       ],
@@ -225,6 +237,12 @@
     {
       "index": 2,
       "title": "Vivienda - violencia intrafamiliar con menor (NNA)",
+      "splash": {
+        "status": "ready",
+        "readyMs": 4751,
+        "items": 83,
+        "errors": 0
+      },
       "manualClosed": true,
       "selectStrategy": "select",
       "canvasRect": {
@@ -247,14 +265,14 @@
         "nearBlackFrac": 0.2595,
         "pixels": 410848
       },
-      "fps": 38.7,
+      "fps": 40.2,
       "perf": {
         "tier": "media",
         "dpr": 1.25,
         "calls": 593,
         "triangles": 731126,
         "programs": 58,
-        "fps": 41
+        "fps": 43
       },
       "switchBackStats": {
         "mean": 51.03,
@@ -267,9 +285,9 @@
         "available": true,
         "changed": true,
         "stats": {
-          "mean": 11.14,
+          "mean": 11.13,
           "std": 19.06,
-          "nearBlackFrac": 0.6424,
+          "nearBlackFrac": 0.6427,
           "pixels": 410848
         }
       },
@@ -318,6 +336,12 @@
     {
       "index": 3,
       "title": "Vía pública - siniestro vial con lesionados",
+      "splash": {
+        "status": "ready",
+        "readyMs": 4258,
+        "items": 83,
+        "errors": 0
+      },
       "manualClosed": true,
       "selectStrategy": "select",
       "canvasRect": {
@@ -340,19 +364,19 @@
         "nearBlackFrac": 0.3658,
         "pixels": 410848
       },
-      "fps": 42,
+      "fps": 3.8,
       "perf": {
         "tier": "media",
         "dpr": 1.25,
         "calls": 725,
         "triangles": 669930,
-        "programs": 65,
-        "fps": 46
+        "programs": 61,
+        "fps": 24
       },
       "switchBackStats": {
-        "mean": 52.74,
-        "std": 59.86,
-        "nearBlackFrac": 0.3658,
+        "mean": 50.45,
+        "std": 58.08,
+        "nearBlackFrac": 0.3796,
         "pixels": 410848
       },
       "forensic": {
@@ -360,9 +384,9 @@
         "available": true,
         "changed": true,
         "stats": {
-          "mean": 15.27,
-          "std": 25.66,
-          "nearBlackFrac": 0.5565,
+          "mean": 14.94,
+          "std": 25.64,
+          "nearBlackFrac": 0.547,
           "pixels": 410848
         }
       },
@@ -382,8 +406,8 @@
           "id": "no-negro-tras-cambio",
           "pass": true,
           "value": {
-            "nearBlackFrac": 0.3658,
-            "std": 59.86
+            "nearBlackFrac": 0.3796,
+            "std": 58.08
           },
           "threshold": "nearBlackFrac < 0.85 y std > 12"
         },

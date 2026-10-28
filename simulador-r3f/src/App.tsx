@@ -12,6 +12,8 @@ import { ProcedureStrip } from './ui/ProcedurePanel';
 import { SceneBoundary, SceneFailure } from './ui/SceneBoundary';
 import { Modals } from './ui/Modals';
 import { sceneView, shortcutFor } from './ui/logic';
+import { Splash } from './ui/Splash';
+import { splashDisabled } from './ui/splashLogic';
 import './App.css';
 
 function lazyInit(): SimState {
@@ -32,6 +34,7 @@ export default function App() {
   const [inspectorOpen, setInspectorOpen] = useState(isWide);
   const [logOpen, setLogOpen] = useState(false);
   const [contextLost, setContextLost] = useState(false);
+  const [splash, setSplash] = useState(() => typeof window === 'undefined' || !splashDisabled(window.location.search));
 
   // Persistir en cada cambio relevante.
   useEffect(() => { saveState(state); }, [state]);
@@ -55,7 +58,8 @@ export default function App() {
 
   // Un solo keydown global; la decisión vive en shortcutFor (pura y probada):
   // ignora campos de texto y teclas repetidas, y Esc cierra el modal antes que nada.
-  const modalOpen = state.modal !== null;
+  // Con la bienvenida delante, los atajos de la escena no aplican y las etiquetas Html se ocultan.
+  const modalOpen = state.modal !== null || splash;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
@@ -125,6 +129,8 @@ export default function App() {
       {contextLost && <div className="scene-fail-wrap"><SceneFailure reason="contextlost" /></div>}
 
       <Modals state={state} dispatch={dispatch} />
+
+      {splash && <Splash onEnter={() => setSplash(false)} />}
     </div>
   );
 }
