@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "eval:visual": "node scripts/visual-eval.mjs"
+    "eval:visual": "node scripts/visual-eval.mjs",
+    "eval:ux": "node scripts/ux-walkthrough.mjs"
   },
   "dependencies": {
     "@fontsource-variable/public-sans": "^5.3.0",

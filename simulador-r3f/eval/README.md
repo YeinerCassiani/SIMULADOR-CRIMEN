@@ -56,8 +56,8 @@ Cada escenario se evalúa en un contexto de navegador nuevo (localStorage limpio
 | Control | Estrategia |
 |---|---|
 | Bienvenida | `[data-splash-enter]` (atributo estable, no clase); habilitado = carga lista |
-| Modal manual | primer `<button>` cuyo texto empieza con "Entendido" |
-| Escenario | 1) `<select>` con ≥ 2 opciones cuyo texto es un título de escenario (títulos leídos de `src/data/scenarios.ts` con regex `title: '...'`), se usa `elementHandle.select()` que dispara `change`; 2) si no hay select: primer `[role=option|radio|tab|menuitem|menuitemradio]`, `button` o `a` cuyo texto o aria-label contiene el título |
+| Modal manual | primer `<button>` cuyo texto empieza con "Entendido" (se abre al empezar la práctica) |
+| Escenario | 0) pantalla de inicio: `[data-home]` si ya hay práctica, `[data-start-student]`, la tarjeta `[data-start-case="<título>"]`, dos veces `[data-start-next]` (rol por defecto) y `[data-start-go]`; 1) versiones antiguas: `<select>` con ≥ 2 opciones cuyo texto es un título de escenario (títulos leídos de `src/data/scenarios.ts` con regex `title: '...'`), se usa `elementHandle.select()` que dispara `change`; 2) si no hay select: primer `[role=option|radio|tab|menuitem|menuitemradio]`, `button` o `a` cuyo texto o aria-label contiene el título |
 | Canvas 3D | el `<canvas>` de mayor área |
 | Luz forense | `button`, `[role=switch|checkbox|button]`, `input[type=checkbox]` o `label` con /luz\s+forense/i en texto, aria-label o title; si no, tecla `L` |
 

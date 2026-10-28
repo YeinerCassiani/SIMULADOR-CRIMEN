@@ -1,16 +1,17 @@
 import { useRef, type Dispatch, type KeyboardEvent } from 'react';
-import { Check, CircleAlert, ClipboardList, Download, LifeBuoy, Lock, RotateCcw, TriangleAlert, X } from 'lucide-react';
+import { Check, CircleAlert, ClipboardList, Download, FileText, Flag, LifeBuoy, Lock, RotateCcw, TriangleAlert, X } from 'lucide-react';
 import type { Action, SimState } from '../simulator';
-import { riskOfTool } from '../simulator';
 import { SEARCH_METHODS } from '../types';
 import { buildReport, buildCSV, downloadText, exportData } from '../report';
 import { ROLE_DEFS, capabilitySummary, LEVEL_LABEL } from '../roles';
+import { planGlobal, planWitness } from '../flow';
+import { EvidenceActions } from './PracticeAids';
 import type { QualityTier, ViewSettings } from '../scene/contracts';
 import { EvidenceLabelCard } from './EvidenceLabelCard';
 import { LogDrawer } from './LogDrawer';
 import { ProcedurePanel } from './ProcedurePanel';
 import type { PanelId } from './Rail';
-import { QUALITY_OPTIONS, actionAriaLabel, nextIndex, permMark, stepsDone, toolLabel } from './logic';
+import { QUALITY_OPTIONS, actionAriaLabel, nextIndex, permMark, stepsDone } from './logic';
 
 type GlobalId = 'EPP' | 'CORDON' | 'ROUTE' | 'SEARCH_METHOD' | 'INTERVIEW' | 'REPORT_INIT' | 'HANDOVER';
 
@@ -26,7 +27,7 @@ const GLOBALS: { id: GlobalId; label: string; flag: keyof SimState['globals'] }[
 
 const TABS: { id: PanelId; label: string }[] = [
   { id: 'escena', label: 'Escena' },
-  { id: 'procedimiento', label: 'Procedimiento' },
+  { id: 'procedimiento', label: 'Avance' },
   { id: 'ajustes', label: 'Ajustes' },
 ];
 
@@ -47,9 +48,9 @@ interface Props {
 export function Inspector(props: Props) {
   const { open, panel, onPanel, onClose, state, logOpen, onToggleLog } = props;
   return (
-    <aside id="inspector" className={`inspector${open ? ' is-open' : ''}`} aria-label="Inspector" hidden={!open}>
+    <aside id="inspector" className={`inspector${open ? ' is-open' : ''}`} aria-label="Panel del caso" hidden={!open}>
       <div className="insp-head">
-        <div className="tabs" role="tablist" aria-label="Paneles del inspector">
+        <div className="tabs" role="tablist" aria-label="Secciones del panel">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -63,7 +64,7 @@ export function Inspector(props: Props) {
             ><span className="sel-line">{t.label}</span></button>
           ))}
         </div>
-        <button type="button" className="btn-icon insp-close" aria-label="Cerrar inspector" onClick={onClose}>
+        <button type="button" className="btn-icon insp-close" aria-label="Cerrar el panel" onClick={onClose}>
           <X size={18} strokeWidth={1.5} aria-hidden="true" />
         </button>
       </div>
@@ -89,13 +90,8 @@ function ScenePanel({ state, dispatch, view }: Props) {
   const selected = items.find((e) => e.id === state.selectedEvidenceId);
   const st = selected ? state.evidence[selected.id] : null;
 
-  const pickEvidence = (id: string) => {
-    if (state.selectedTool) {
-      const warnings = riskOfTool(state.selectedTool, id, state);
-      if (warnings.length) dispatch({ type: 'OPEN_MODAL', modal: { kind: 'confirm', evidenceId: id, tool: state.selectedTool, warnings } });
-      else dispatch({ type: 'APPLY_TOOL', id });
-    } else dispatch({ type: 'SELECT_EVIDENCE', id });
-  };
+  const pickEvidence = (id: string) => dispatch({ type: 'SELECT_EVIDENCE', id: state.selectedEvidenceId === id ? null : id });
+  const evaluation = state.practice.mode === 'evaluacion';
 
   // Flechas, Inicio y Fin mueven el foco entre los EMP/EF de la lista.
   const onListKey = (e: KeyboardEvent<HTMLUListElement>) => {
@@ -128,7 +124,8 @@ function ScenePanel({ state, dispatch, view }: Props) {
                   type="button"
                   className={`ev-row${on ? ' is-on' : ''}`}
                   aria-current={on ? 'true' : undefined}
-                  aria-label={`${state.selectedTool ? 'Aplicar ' + toolLabel(state.selectedTool) + ' a ' : 'Seleccionar '}${label}`}
+                  aria-label={`${on ? 'Cerrar' : 'Ver los pasos de'} ${label}`}
+                  aria-expanded={on}
                   onClick={() => pickEvidence(e.id)}
                 >
                   <span className="ev-plate num" aria-hidden="true">{e.id.split('-').pop()}</span>
@@ -144,8 +141,15 @@ function ScenePanel({ state, dispatch, view }: Props) {
           })}
         </ul>
         {selected && st
-          ? <EvidenceLabelCard item={selected} st={st} scenario={state.scenario} />
-          : <p className="empty">Seleccione un EMP/EF en la lista o en la escena para ver su rótulo.</p>}
+          ? (
+            <div className="ev-detail">
+              <h3 className="group-h">{selected.id} · {selected.name}</h3>
+              <p className="meta">{selected.description}</p>
+              <EvidenceActions state={state} dispatch={dispatch} id={selected.id} />
+              <EvidenceLabelCard item={selected} st={st} scenario={state.scenario} />
+            </div>
+          )
+          : <p className="empty">Toque un EMP/EF en la lista o en la escena para ver sus pasos.</p>}
       </section>
 
       {state.scenario.witnesses.length > 0 && (
@@ -159,7 +163,7 @@ function ScenePanel({ state, dispatch, view }: Props) {
               return (
                 <li key={w.id} className="row">
                   <span className="row-main"><span className="row-title">{w.name}</span><span className="meta">{status}</span></span>
-                  <button type="button" className="btn-outline" disabled={ws.interviewed} aria-label={`${next} a ${w.name}`} onClick={() => dispatch({ type: 'WITNESS_ACTION', id: w.id })}>{next}</button>
+                  <button type="button" className="btn-outline" data-witness={w.id} disabled={ws.interviewed || state.finalized} aria-label={`${next} a ${w.name}`} onClick={() => dispatch(planWitness(state, w.id))}>{next}</button>
                 </li>
               );
             })}
@@ -168,7 +172,7 @@ function ScenePanel({ state, dispatch, view }: Props) {
       )}
 
       <section className="section" aria-labelledby="glob-h">
-        <h2 id="glob-h" className="section-h">Acciones globales</h2>
+        <h2 id="glob-h" className="section-h">Acciones en la escena</h2>
         <ul className="actions">
           {GLOBALS.map((g) => {
             const mark = permMark(state.role, g.id);
@@ -178,10 +182,12 @@ function ScenePanel({ state, dispatch, view }: Props) {
                 <button
                   type="button"
                   className={`action${on ? ' is-on' : ''}`}
+                  data-global={g.id}
                   aria-pressed={on}
+                  disabled={on || state.finalized}
                   aria-label={actionAriaLabel(g.label, mark)}
                   title={mark?.reason}
-                  onClick={() => dispatch({ type: 'APPLY_GLOBAL', action: g.id })}
+                  onClick={() => dispatch(planGlobal(state, g.id))}
                 >
                   <span className="action-check" aria-hidden="true">{on && <Check size={14} strokeWidth={2} />}</span>
                   <span className="action-label">{g.label}</span>
@@ -201,28 +207,35 @@ function ScenePanel({ state, dispatch, view }: Props) {
           <button type="button" className={`btn-outline${state.globals.salvamento ? ' is-on' : ''}`} aria-pressed={state.globals.salvamento} onClick={() => dispatch({ type: 'OPEN_MODAL', modal: { kind: 'salvamento' } })}>
             <LifeBuoy size={16} strokeWidth={1.5} aria-hidden="true" /> Salvamento
           </button>
-          <button type="button" className="btn-outline" onClick={() => dispatch({ type: 'OPEN_MODAL', modal: { kind: 'access' } })}>
+          <button type="button" className="btn-outline" data-open="access" onClick={() => dispatch({ type: 'OPEN_MODAL', modal: { kind: 'access' } })}>
             <ClipboardList size={16} strokeWidth={1.5} aria-hidden="true" /> Registro acceso <span className="num muted">{state.accessLog.length}</span>
           </button>
         </div>
       </section>
 
       <section className="section" aria-labelledby="close-h">
-        <h2 id="close-h" className="section-h">Cierre y descargas</h2>
-        <button type="button" className="btn-primary full" onClick={() => dispatch({ type: 'OPEN_MODAL', modal: { kind: 'closure' } })}>Cerrar y finalizar</button>
-        <div className="btn-grid">
-          <button type="button" className="btn-outline" onClick={() => downloadText('informe_simulador_cadena_custodia.txt', buildReport(state))}><Download size={16} strokeWidth={1.5} aria-hidden="true" /> Informe TXT</button>
-          <button type="button" className="btn-outline" onClick={() => downloadText('registro_simulador.json', JSON.stringify(exportData(state), null, 2))}><Download size={16} strokeWidth={1.5} aria-hidden="true" /> Registro JSON</button>
-          <button type="button" className="btn-outline" onClick={() => downloadText('bitacora_simulador.csv', buildCSV(state))}><Download size={16} strokeWidth={1.5} aria-hidden="true" /> Bitácora CSV</button>
-          <button type="button" className="btn-outline neg" onClick={() => { if (confirm('¿Reiniciar la práctica actual?')) dispatch({ type: 'RESET' }); }}><RotateCcw size={16} strokeWidth={1.5} aria-hidden="true" /> Reiniciar</button>
-        </div>
-        {state.finalized && <p className="meta">Práctica finalizada: las acciones quedan bloqueadas. Use Reiniciar para una nueva práctica.</p>}
+        <h2 id="close-h" className="section-h">Terminar</h2>
+        {!state.finalized
+          ? <button type="button" className="btn-primary full" data-open="closure" onClick={() => dispatch({ type: 'OPEN_MODAL', modal: { kind: 'closure' } })}><Flag size={16} strokeWidth={1.75} aria-hidden="true" /> Cerrar la escena y finalizar</button>
+          : <button type="button" className="btn-primary full" data-open="report" onClick={() => dispatch({ type: 'OPEN_MODAL', modal: { kind: 'report' } })}><FileText size={16} strokeWidth={1.75} aria-hidden="true" /> Ver y descargar el informe</button>}
+        {state.finalized && <p className="meta">Práctica finalizada: las acciones quedan bloqueadas. Para practicar otra vez use Empezar de nuevo o vuelva al Inicio.</p>}
+        {(!evaluation || state.finalized) && (
+          <details className="more">
+            <summary>Otros formatos de descarga</summary>
+            <div className="btn-grid">
+              <button type="button" className="btn-outline" onClick={() => downloadText('informe_simulador.txt', buildReport(state))}><Download size={16} strokeWidth={1.5} aria-hidden="true" /> Informe en texto</button>
+              <button type="button" className="btn-outline" onClick={() => downloadText('bitacora_simulador.csv', buildCSV(state))}><Download size={16} strokeWidth={1.5} aria-hidden="true" /> Bitácora (hoja de cálculo)</button>
+              <button type="button" className="btn-outline" onClick={() => downloadText('registro_simulador.json', JSON.stringify(exportData(state), null, 2))}><Download size={16} strokeWidth={1.5} aria-hidden="true" /> Registro técnico</button>
+            </div>
+          </details>
+        )}
+        <button type="button" className="btn-outline neg full" onClick={() => { if (confirm('¿Empezar de nuevo este caso? Se borra lo hecho en esta práctica.')) dispatch({ type: 'RESET' }); }}><RotateCcw size={16} strokeWidth={1.5} aria-hidden="true" /> Empezar de nuevo</button>
       </section>
     </>
   );
 }
 
-function SettingsPanel({ state, view, onQuality, tier }: Props) {
+function SettingsPanel({ state, dispatch, view, onQuality, tier }: Props) {
   const role = ROLE_DEFS.find((r) => r.id === state.role);
   return (
     <>
@@ -246,18 +259,25 @@ function SettingsPanel({ state, view, onQuality, tier }: Props) {
             ))}
           </tbody>
         </table>
-        <p className="meta">Una acción correcta hecha por un rol no facultado se bloquea y resta puntos (Matriz de permisos, Sección 8). El rol se cambia en la barra superior.</p>
+        <p className="meta">Una acción hecha por un rol no facultado se bloquea y resta puntos (Matriz de permisos, Sección 8).</p>
+        <label className="field">
+          <span className="field-label">Relevo de rol: continuar como</span>
+          <select className="control" data-relevo-select value={state.role} disabled={state.finalized} onChange={(e) => dispatch({ type: 'SET_ROLE', role: e.target.value })}>
+            {ROLE_DEFS.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
+          </select>
+        </label>
+        <p className="meta">En una escena real cada quien entrega a la siguiente persona. El relevo queda en la bitácora con el rol de cada acción.</p>
       </section>
 
       <section className="section" aria-labelledby="q-h">
-        <h2 id="q-h" className="section-h">Calidad gráfica</h2>
+        <h2 id="q-h" className="section-h">Calidad de imagen</h2>
         <label className="field">
           <span className="field-label">Nivel de calidad</span>
           <select className="control" value={view.quality} onChange={(e) => onQuality(e.target.value as ViewSettings['quality'])}>
             {QUALITY_OPTIONS.map((q) => <option key={q.value} value={q.value}>{q.label}</option>)}
           </select>
         </label>
-        <p className="meta">Nivel efectivo: <b>{tier ? tier[0].toUpperCase() + tier.slice(1) : '—'}</b>. En automático, el monitor de rendimiento baja la calidad si la escena no sostiene la fluidez.</p>
+        <p className="meta">Ahora: <b>{tier ? tier[0].toUpperCase() + tier.slice(1) : 'calculando'}</b>. En automática, la imagen se simplifica sola si el equipo va lento. Si la escena se ve lenta o entrecortada, elija Baja.</p>
       </section>
 
       <section className="section" aria-labelledby="keys-h">
@@ -266,6 +286,7 @@ function SettingsPanel({ state, view, onQuality, tier }: Props) {
           <div><dt><kbd className="kbd">L</kbd></dt><dd>Alterna la luz forense</dd></div>
           <div><dt><kbd className="kbd">Esc</kbd></dt><dd>Cierra el diálogo abierto; sin diálogo, vuelve a la vista general</dd></div>
           <div><dt><kbd className="kbd">Flechas</kbd></dt><dd>Recorren la lista de EMP/EF</dd></div>
+          <div><dt>Ratón</dt><dd>Arrastre para girar la vista; la rueda acerca y aleja</dd></div>
         </dl>
       </section>
     </>

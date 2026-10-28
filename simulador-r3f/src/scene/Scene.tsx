@@ -108,7 +108,7 @@ export function Scene({ state, dispatch, view, onTierChange }: SceneProps) {
       </group>
 
       {/* Cámara (CameraControls) y brújula; ambas respetan los paneles de la UI. */}
-      <ViewportRig scenario={scenario} selected={selectedItem} overview={view.overview} />
+      <ViewportRig scenario={scenario} selected={selectedItem} overview={view.overview} camera={view.camera} />
 
       <PostFx tier={tier} />
 

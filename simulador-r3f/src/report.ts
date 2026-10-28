@@ -268,3 +268,70 @@ export function validateScenario(s: unknown): asserts s is Scenario {
       throw new Error('Cada EMP/EF requiere id, name, x y z.');
   });
 }
+
+// --- Informe estructurado (vista imprimible, sin datos personales) ---
+
+export interface ReportModel {
+  caseTitle: string;
+  nunc: string;
+  location: string;
+  mode: SimState['practice']['mode'];
+  /** Hora ISO de la primera acción (inicio de la práctica). */
+  startedAt: string | null;
+  /** Rol con el que inició y roles que actuaron (en orden de aparición). */
+  initialRole: string;
+  roles: string[];
+  score: number;
+  grade: string;
+  verdict: string;
+  progress: number;
+  delivered: number;
+  total: number;
+  contaminated: number;
+  evidence: { id: string; name: string; done: number; contaminated: boolean; reason: string | null; deliveredTo: string | null; pending: string[] }[];
+  /** Errores y alertas en orden cronológico. */
+  mistakes: { time: string; role: string; message: string; points: number }[];
+  offRole: number;
+  custodyBreaks: number;
+  accessRecords: number;
+  salvamento: number;
+  finalized: boolean;
+}
+
+export function reportModel(state: SimState): ReportModel {
+  const items = state.scenario.evidenceItems;
+  const total = items.length;
+  const delivered = items.filter((e) => state.evidence[e.id].delivered).length;
+  const contaminated = items.filter((e) => state.evidence[e.id].contaminated).length;
+  const chrono = state.log.slice().reverse();
+  const roles = Array.from(new Set(chrono.map((l) => l.role).filter((r): r is string => !!r)));
+  return {
+    caseTitle: state.scenario.title,
+    nunc: state.scenario.nunc,
+    location: state.scenario.sceneLocation,
+    mode: state.practice.mode,
+    startedAt: chrono[0]?.time ?? null,
+    initialRole: roles[0] ?? state.role,
+    roles: roles.length ? roles : [state.role],
+    score: state.score,
+    grade: grade(state.score),
+    verdict: feedbackText(delivered, total, contaminated, state.score),
+    progress: progressPercent(state),
+    delivered, total, contaminated,
+    evidence: items.map((e) => {
+      const st = state.evidence[e.id];
+      return {
+        id: e.id, name: e.name, done: STEP_KEYS.filter((k) => st[k]).length,
+        contaminated: st.contaminated, reason: st.contaminationReason, deliveredTo: st.deliveredTo, pending: pendingSteps(st),
+      };
+    }),
+    mistakes: chrono.filter((l) => l.type === 'bad' || l.type === 'warn').map((l) => ({
+      time: timeOf(l.time), role: roleLabel(l.role || state.role), message: l.message.replace(/^[+-]?\d+ pts - /, ''), points: l.points,
+    })),
+    offRole: state.log.filter((l) => l.competence === 'deny').length,
+    custodyBreaks: custodyTraceText(state).totalBreaks,
+    accessRecords: state.accessLog.length,
+    salvamento: state.salvamentoRecords.length,
+    finalized: state.finalized,
+  };
+}

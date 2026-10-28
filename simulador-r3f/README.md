@@ -8,7 +8,27 @@ npm run dev            # http://localhost:5173 (añadir ?perf para ver fps/draws
 npm run test:run       # gate vitest (< 2 s de tests)
 npm run lint
 npm run build          # tsc -b + vite build
+npm run eval:ux        # recorrido de uso en Chrome real (estudiante y docente), con capturas
 ```
+
+## Cómo se usa
+
+Pensado para un docente sin experiencia en software y sus estudiantes. Nadie escribe JSON ni configura nada técnico, y no se guardan nombres ni datos personales.
+
+1. **Bienvenida**: barra de carga real y botón "Entrar a la escena".
+2. **Inicio**: "Soy estudiante" o "Soy docente". Si hay una práctica sin terminar en el equipo, se ofrece continuarla.
+3. **Estudiante**: elige el caso, luego el rol (cada tarjeta dice qué puede y qué no puede hacer) y ve un resumen antes de empezar. El rol identifica la práctica en el informe.
+4. **Práctica**:
+   - Al tocar un EMP/EF (en la escena o la lista) aparecen sus 8 pasos como botones.
+   - En **práctica guiada**, una barra arriba dice el siguiente paso y su botón "Mostrarme dónde" resalta el control que hay que usar. Tras cada acción aparece un aviso con el resultado y los puntos.
+   - Si un paso le corresponde a otro rol, se ofrece el **relevo**: ningún rol puede terminar un caso solo según la matriz de la Sección 8, así que el relevo reemplaza al bloqueo. La bitácora registra qué rol hizo cada acción.
+   - En **evaluación** no hay pistas ni puntaje visible; todo se ve en el informe final.
+5. **Informe**: al cerrar la escena se muestra el informe con el resultado, el estado de cada EMP/EF y los errores con su norma. Se imprime o se guarda como PDF desde el navegador.
+6. **Docente** (protegido con un PIN de 4 a 8 números en ese equipo):
+   - Elige el modo, el tiempo en lugares abiertos, los roles disponibles y los casos visibles.
+   - Crea casos propios con un formulario, ubicando cada EMP/EF con un toque en el plano.
+   - Comparte todo con un enlace (`#practica=...`) que funciona sin servidor.
+   - El PIN solo evita la curiosidad: la configuración viaja en el enlace y alguien con conocimientos técnicos puede leerla.
 
 ## Arquitectura visual
 
@@ -20,7 +40,9 @@ La única frontera entre la interfaz y la escena es `src/scene/contracts.ts`: `V
 | `src/scene/render/` | Luz global de noche: ambiente, hemisférica, luna, clave direccional del interior, relleno y baño de muros, UV forense. También el postproceso (N8AO, Bloom, SMAA, Vignette y un solo `ToneMapping` ACES), la cámara (`CameraControls`, vuelo de entrada, encuadre del EMP/EF, desplazamiento por los paneles), la calidad adaptativa (`pickTier` con histéresis) y el HDRI local. |
 | `src/scene/env/` | Los cuatro ambientes (apartamento, vivienda, parque, vía): arquitectura con vanos, mobiliario CC0 (`GltfProp`) y materiales PBR (`Surface`). Las luces prácticas (colgantes, faroles de sodio, lámpara de noche) y el layout puro (`layout.ts`) quitan los muebles que chocan con un EMP/EF. |
 | `src/scene/forensic/` | Capa forense: cinta "NO PASE", ruta de placas de paso, trípodes de trabajo (modelo y luz), manchas latentes del modo luz forense, placas numeradas, regla fotográfica y halo de selección (`Evidence.tsx`), maquetas de los EMP/EF (`EvidenceModel.tsx`) y testigos (`Witnesses.tsx`). |
-| `src/ui/` | Consola forense: riel, barra superior, bandeja de herramientas, inspector con el rótulo de cadena de custodia, hoja de ruta, bitácora y modales. La lógica pura está en `logic.ts` y `roadmap.ts`. |
+| `src/ui/` | Interfaz:<ul><li>Bienvenida (`Splash`), inicio (`StartScreen`), espacio docente (`TeacherSpace`, `CaseEditor`).</li><li>Barra superior, riel, panel del caso con los pasos de cada EMP/EF (`PracticeAids`), barra de siguiente paso, botones de cámara, aviso tras cada acción (`ActionFeedback`), informe imprimible (`ReportView`) y modales.</li><li>Lógica pura en `logic.ts`, `roadmap.ts`, `startLogic.ts`, `caseLogic.ts` y `splashLogic.ts`.</li></ul> |
+| `src/flow.ts` | Flujo de la práctica (puro): siguiente paso sugerido, a qué rol le corresponde cada acción y cómo se ejecuta cada intención según el modo (relevo y aviso en guiada, directo en evaluación). |
+| `src/practiceConfig.ts` | Configuración del docente: validación, enlace para estudiantes, casos y roles visibles, huella del PIN. |
 
 Las reglas de reparto de luces se fijaron en la integración y las prueba `integration.test.ts`. Los focos de trabajo los monta solo `forensic`; render ilumina únicamente lo global. Las luces no se montan ni desmontan por calidad o modo forense, solo cambian de intensidad, para no recompilar shaders.
 
@@ -37,6 +59,10 @@ node scripts/fetch-assets.mjs --only=Sofa_01
 ```
 
 `manifest.test.ts` verifica que cada archivo exista con los bytes del manifest, que la licencia sea CC0, la fuente, el presupuesto (≤ 2.5 MB por modelo, ≤ 45 MB en total) y que no haya Draco.
+
+## Recorrido de uso
+
+`npm run eval:ux` (con el servidor de desarrollo encendido) recorre la aplicación en Chrome. Como estudiante: bienvenida, caso, rol, ayuda, siguiente paso, "Mostrarme dónde", aviso, relevo de rol, pasos de un EMP/EF, cámara, cierre e informe impreso. Como docente: crear PIN, ajustes y editor de casos. Termina con el teléfono a 390 px. Deja capturas en `eval/shots/ux/` y falla si un paso no está o si hay errores de consola.
 
 ## Evaluación visual
 

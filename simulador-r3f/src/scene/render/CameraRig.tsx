@@ -14,6 +14,8 @@ import { useThree } from '@react-three/fiber';
 import { CameraControls, GizmoHelper, GizmoViewport } from '@react-three/drei';
 import { Vector3, type PerspectiveCamera } from 'three';
 import type { EvidenceItem, Scenario } from '../../types';
+import type { ViewSettings } from '../contracts';
+import { cameraStep } from './presets';
 import { CAMERA_LIMITS, NO_INSETS, entryPose, framingPose, overviewPose, parseInsets, viewOffsetFor, type CameraPose, type SceneInsets } from './presets';
 
 /** Tiempo de amortiguación de los vuelos: con 0.45 s el vuelo asienta en ~1.6 s. */
@@ -72,10 +74,11 @@ interface Props {
   scenario: Scenario;
   selected: EvidenceItem | null;
   overview: number;
+  camera: ViewSettings['camera'];
   insets: SceneInsets;
 }
 
-export const CameraRig = memo(function CameraRig({ scenario, selected, overview, insets }: Props) {
+export const CameraRig = memo(function CameraRig({ scenario, selected, overview, camera: cameraCmd, insets }: Props) {
   const controls = useRef<CameraControls>(null);
   const camera = useThree((s) => s.camera) as PerspectiveCamera;
   const size = useThree((s) => s.size);
@@ -133,6 +136,18 @@ export const CameraRig = memo(function CameraRig({ scenario, selected, overview,
     go(overviewPose(dims), true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [overview]);
+
+  // Botones de cámara de la interfaz: cada incremento de seq ejecuta un paso.
+  const firstCmd = useRef(cameraCmd.seq);
+  useEffect(() => {
+    const c = controls.current;
+    if (!c || cameraCmd.seq === firstCmd.current) return;
+    const step = cameraStep(cameraCmd.cmd);
+    const smooth = !reducedMotion();
+    if (step.dolly) void c.dolly(step.dolly, smooth);
+    if (step.azimuth) void c.rotate(step.azimuth, 0, smooth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cameraCmd.seq]);
 
   return (
     <CameraControls

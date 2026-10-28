@@ -1,23 +1,22 @@
 import type { LucideIcon } from 'lucide-react';
-import { BookOpen, Box, GraduationCap, ListChecks, Scale, Settings } from 'lucide-react';
+import { Box, CircleHelp, ListChecks, Scale, Settings } from 'lucide-react';
 import { Monogram } from './Monogram';
 
 /** Paneles del inspector; los demás destinos del riel abren un modal. */
 export type PanelId = 'escena' | 'procedimiento' | 'ajustes';
 
-export type RailTarget = PanelId | 'normativo' | 'docente' | 'manual';
+export type RailTarget = PanelId | 'normativo' | 'manual';
 
 interface Dest { id: RailTarget; label: string; short: string; icon: LucideIcon }
 
 const MAIN: Dest[] = [
   { id: 'escena', label: 'Escena: EMP/EF, testigos y acciones', short: 'Escena', icon: Box },
-  { id: 'procedimiento', label: 'Procedimiento: hoja de ruta', short: 'Ruta', icon: ListChecks },
+  { id: 'procedimiento', label: 'Procedimiento: qué lleva hecho', short: 'Avance', icon: ListChecks },
   { id: 'normativo', label: 'Marco normativo', short: 'Normas', icon: Scale },
-  { id: 'docente', label: 'Editor docente', short: 'Docente', icon: GraduationCap },
 ];
 const UTIL: Dest[] = [
-  { id: 'manual', label: 'Manual del simulador', short: 'Manual', icon: BookOpen },
-  { id: 'ajustes', label: 'Ajustes: rol, permisos y calidad', short: 'Ajustes', icon: Settings },
+  { id: 'manual', label: 'Ayuda: cómo se usa', short: 'Ayuda', icon: CircleHelp },
+  { id: 'ajustes', label: 'Ajustes: rol, relevo y calidad de imagen', short: 'Ajustes', icon: Settings },
 ];
 
 interface Props {
@@ -25,7 +24,7 @@ interface Props {
   onGo: (t: RailTarget) => void;
 }
 
-// Riel de 56px (escritorio) que pasa a barra inferior con etiquetas cortas (< 1100px).
+// Riel con ícono y nombre visible (escritorio) que pasa a barra inferior (< 1100px).
 // El destino activo se marca con la línea de acento de 1px en el borde del riel.
 export function Rail({ active, onGo }: Props) {
   const item = (d: Dest) => {

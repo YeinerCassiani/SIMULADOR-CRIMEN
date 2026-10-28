@@ -230,3 +230,14 @@ export function findHdriUrl(mod: unknown): string | null {
   if (!found.length) return null;
   return found.find((u) => /night|noche|moon|luna|dusk|dark/i.test(u)) ?? found[0];
 }
+
+
+/** Paso de cámara de los botones de la interfaz: acercar/alejar (m) y girar (rad). */
+export function cameraStep(cmd: 'in' | 'out' | 'left' | 'right'): { dolly: number; azimuth: number } {
+  switch (cmd) {
+    case 'in': return { dolly: 2.5, azimuth: 0 };
+    case 'out': return { dolly: -2.5, azimuth: 0 };
+    case 'left': return { dolly: 0, azimuth: Math.PI / 8 };
+    case 'right': return { dolly: 0, azimuth: -Math.PI / 8 };
+  }
+}

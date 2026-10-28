@@ -7,6 +7,9 @@ import type { EvidenceItem, EvidenceState, Scenario } from '../types';
 
 export type QualityTier = 'alta' | 'media' | 'baja';
 
+/** Movimiento de cámara pedido desde los botones de la interfaz. */
+export type CameraCmd = 'in' | 'out' | 'left' | 'right';
+
 export interface ViewSettings {
   /** Calidad elegida por el usuario; 'auto' deja decidir al monitor de rendimiento. */
   quality: 'auto' | QualityTier;
@@ -16,6 +19,8 @@ export interface ViewSettings {
   labels: boolean;
   /** Contador: cada incremento pide a la cámara volver a la vista general. */
   overview: number;
+  /** Cada incremento de `seq` ejecuta `cmd` una vez (botones de cámara). */
+  camera: { seq: number; cmd: CameraCmd };
 }
 
 export const DEFAULT_VIEW: ViewSettings = {
@@ -23,6 +28,7 @@ export const DEFAULT_VIEW: ViewSettings = {
   forensicLight: false,
   labels: true,
   overview: 0,
+  camera: { seq: 0, cmd: 'in' },
 };
 
 export interface SceneProps {

@@ -94,6 +94,24 @@ async function closeManual(page) {
  * Devuelve la estrategia usada o null.
  */
 async function selectScenario(page, title, titles) {
+  // 0) Pantalla de inicio (desde la versión con flujo de inicio): Inicio, estudiante,
+  //    caso por título, rol por defecto, empezar. Atributos data-start-* estables.
+  if (await page.$('[data-start-screen], [data-home]')) {
+    const ok = await page.evaluate(async (title) => {
+      const wait = () => new Promise((r) => setTimeout(r, 120));
+      const click = async (sel) => { const el = document.querySelector(sel); if (!el) return false; el.click(); await wait(); return true; };
+      if (!document.querySelector('[data-start-screen]')) await click('[data-home]');
+      if (!(await click('[data-start-student]'))) return false;
+      const card = [...document.querySelectorAll('[data-start-case]')].find((el) => el.getAttribute('data-start-case') === title);
+      if (!card) return false;
+      card.click(); await wait();
+      if (!(await click('[data-start-next]'))) return false;
+      if (!(await click('[data-start-next]'))) return false;
+      return click('[data-start-go]');
+    }, title);
+    if (ok) { await closeManual(page); return 'start'; }
+    return null;
+  }
   const value = await page.evaluate((title, titles) => {
     for (const s of document.querySelectorAll('select')) {
       const opts = [...s.options];
@@ -217,9 +235,12 @@ async function evalScenario(browser, args, index, titles, shotsDir) {
     await page.waitForSelector('canvas', { timeout: 30000 });
     await sleep(500);
     r.splash = await passSplash(page);
-    r.manualClosed = await closeManual(page);
     r.selectStrategy = await selectScenario(page, titles[index], titles);
+    r.manualClosed = await closeManual(page) || r.selectStrategy === 'start';
     if (!r.selectStrategy) throw new Error('no se pudo seleccionar el escenario');
+    // Las ayudas flotantes (siguiente paso, cámara, aviso) tapan parte de la escena:
+    // se ocultan para que el contraste mida la escena 3D y no la interfaz.
+    await page.addStyleTag({ content: '.scene-aids,.cam-pad,.feedback{visibility:hidden!important}' });
     await settle(page, args.wait);
 
     const rect = await canvasRect(page);

@@ -1,10 +1,12 @@
 import { useEffect, useId, useRef, useState, type Dispatch, type KeyboardEvent, type ReactNode } from 'react';
 import { TriangleAlert, X } from 'lucide-react';
 import type { Action, SimState } from '../simulator';
-import type { AccessRecord, CustodyRecord, LabelRecord, PackagingId, SalvamentoRecord, Scenario } from '../types';
+import type { AccessRecord, CustodyRecord, LabelRecord, PackagingId, SalvamentoRecord } from '../types';
 import { PACKAGING_LABELS, LAB_DESTINATIONS } from '../types';
 import { roleLabel } from '../roles';
-import { buildReport, downloadText, validateScenario } from '../report';
+import { ACTION_NAME, relevoText } from '../flow';
+import { buildReport, downloadText, reportModel } from '../report';
+import { ReportPrint, ReportView } from './ReportView';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -149,13 +151,13 @@ function ConfirmModal({ state, dispatch }: { state: SimState; dispatch: Dispatch
   const item = state.scenario.evidenceItems.find((e) => e.id === modal.evidenceId);
   return (
     <ModalShell title="Antes de continuar" onClose={() => dispatch({ type: 'CLOSE_MODAL' })}>
-      <p className="lead">Esta acción sobre <b>{item?.id} · {item?.name}</b> tiene consecuencias:</p>
+      <p className="lead">{ACTION_NAME[modal.tool]} <b>{item?.id} · {item?.name}</b> ahora tiene consecuencias:</p>
       <ul className="warn-list">
         {modal.warnings.map((w, i) => <li key={i}><TriangleAlert size={14} strokeWidth={1.5} aria-hidden="true" /><span>{w}</span></li>)}
       </ul>
       <div className="modal-actions">
-        <button type="button" className="btn-primary" onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>Cancelar</button>
-        <button type="button" className="btn-outline neg" onClick={() => { dispatch({ type: 'CLOSE_MODAL' }); dispatch({ type: 'APPLY_TOOL', id: modal.evidenceId }); }}>Proceder de todos modos</button>
+        <button type="button" className="btn-primary" onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>No, volver</button>
+        <button type="button" className="btn-outline neg" onClick={() => { dispatch({ type: 'CLOSE_MODAL' }); dispatch({ type: 'APPLY_TOOL', id: modal.evidenceId, tool: modal.tool }); }}>Hacerlo de todos modos</button>
       </div>
     </ModalShell>
   );
@@ -301,69 +303,71 @@ function AccessModal({ state, dispatch }: { state: SimState; dispatch: Dispatch<
 }
 
 function ReportModal({ state, dispatch }: { state: SimState; dispatch: Dispatch<Action> }) {
-  const report = buildReport(state);
+  const m = reportModel(state);
   return (
-    <ModalShell title="Retroalimentación final" onClose={() => dispatch({ type: 'CLOSE_MODAL' })} wide>
-      <pre className="report-box">{report}</pre>
+    <ModalShell title="Informe de la práctica" onClose={() => dispatch({ type: 'CLOSE_MODAL' })} wide>
+      <ReportView m={m} />
+      <ReportPrint m={m} />
       <div className="modal-actions">
         <button type="button" className="btn-outline" onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>Cerrar</button>
-        <button type="button" className="btn-primary" onClick={() => downloadText('informe_simulador_cadena_custodia.txt', report)}>Descargar informe</button>
+        <button type="button" className="btn-outline" onClick={() => downloadText('informe_simulador.txt', buildReport(state))}>Descargar como texto</button>
+        <button type="button" className="btn-primary" data-report-print onClick={() => window.print()}>Imprimir o guardar como PDF</button>
       </div>
     </ModalShell>
   );
 }
 
-function TeacherModal({ state, dispatch }: { state: SimState; dispatch: Dispatch<Action> }) {
-  const [text, setText] = useState(JSON.stringify(state.scenario, null, 2));
+function ManualModal({ state, dispatch }: { state: SimState; dispatch: Dispatch<Action> }) {
+  const guided = state.practice.mode === 'guiada';
   return (
-    <ModalShell title="Editor docente de escenarios JSON" onClose={() => dispatch({ type: 'CLOSE_MODAL' })} wide>
-      <p className="lead">Pegue un escenario JSON compatible y pulse cargar. Así el docente agrega nuevos casos sin tocar el código principal.</p>
-      <F label="JSON del escenario" full><textarea className="json-area" spellCheck={false} value={text} onChange={(e) => setText(e.target.value)} /></F>
-      <div className="modal-actions">
-        <button type="button" className="btn-outline" onClick={() => navigator.clipboard.writeText(text)}>Copiar JSON actual</button>
-        <button type="button" className="btn-outline" onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>Cerrar</button>
-        <button type="button" className="btn-primary" onClick={() => {
-          try {
-            const scenario = JSON.parse(text) as Scenario;
-            validateScenario(scenario);
-            dispatch({ type: 'LOAD_TEACHER_JSON', scenario });
-          } catch (err) {
-            alert('JSON inválido o incompleto: ' + (err as Error).message);
-          }
-        }}>Cargar JSON</button>
-      </div>
-    </ModalShell>
-  );
-}
-
-function ManualModal({ dispatch }: { dispatch: Dispatch<Action> }) {
-  return (
-    <ModalShell title="Manual instructivo del simulador" onClose={() => dispatch({ type: 'CLOSE_MODAL' })} wide>
-      <p className="lead">Este manual explica cómo realizar la práctica. El objetivo es aprender a intervenir una escena, preservar EMP/EF y diligenciar registros básicos sin recibir la respuesta correcta durante la actividad.</p>
+    <ModalShell title="Cómo se usa el simulador" onClose={() => dispatch({ type: 'CLOSE_MODAL' })} wide>
+      <p className="lead">{state.scenario.initialNarrative}</p>
       <div className="manual-grid">
         <div className="manual-section">
-          <h3>Secuencia recomendada</h3>
+          <h3>Qué tiene que hacer</h3>
           <ol>
-            <li>Use EPP antes de intervenir.</li>
-            <li>Acordone la escena y controle el acceso.</li>
-            <li>Defina ruta de ingreso/salida y método de búsqueda.</li>
-            <li>Observe el EMP/EF, fotografíe y señalice antes de manipular.</li>
-            <li>Recolecte, embale, rotule, diligencie la cadena de custodia y entregue.</li>
+            <li>Asegure el lugar: EPP, acordonamiento, ruta y método de búsqueda.</li>
+            <li>Gestione a los testigos y haga la entrega formal del lugar.</li>
+            <li>Con cada EMP/EF: obsérvelo, fotografíelo y póngale el numerador antes de tocarlo.</li>
+            <li>Después recoléctelo, embálelo, rotúlelo, diligencie la cadena de custodia y entréguelo.</li>
+            <li>Al final, cierre la escena y descargue el informe.</li>
           </ol>
         </div>
         <div className="manual-section">
-          <h3>Cómo interactuar</h3>
+          <h3>Cómo se maneja</h3>
           <ul>
-            <li>Elija una herramienta en la bandeja inferior.</li>
-            <li>Haga clic sobre el EMP/EF en la escena 3D (arrastre para orbitar, rueda para acercar) o en la lista del inspector.</li>
-            <li>Las acciones globales, los testigos y el cierre están en el inspector de la derecha.</li>
-            <li>Tecla L: luz forense. Esc: vista general.</li>
-            <li>Los formularios se llenan manualmente; el sistema asigna puntaje según orden y calidad.</li>
+            <li>Toque un EMP/EF en la escena o en la lista de la derecha: aparecen sus pasos como botones.</li>
+            <li>Las acciones de la escena (EPP, acordonar, testigos, cierre) están en el panel de la derecha.</li>
+            <li>Para moverse use los botones de cámara (acercar, alejar, girar) o arrastre con el ratón.</li>
+            {guided
+              ? <li>Arriba verá siempre el <b>siguiente paso</b> y el botón <b>Mostrarme dónde</b>. Después de cada acción aparece un aviso con lo que pasó.</li>
+              : <li>Está en modo <b>evaluación</b>: no hay pistas. Los puntos y la retroalimentación se ven en el informe final.</li>}
+            <li>Si se pierde, vuelva a abrir esta ayuda con el botón <b>Ayuda</b> del menú de la izquierda.</li>
           </ul>
         </div>
       </div>
       <div className="modal-actions">
-        <button type="button" className="btn-primary" data-eval="manual-close" onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>Entendido, iniciar práctica</button>
+        <button type="button" className="btn-primary" data-eval="manual-close" onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>Entendido, empezar</button>
+      </div>
+    </ModalShell>
+  );
+}
+
+/** Ofrece el relevo cuando el paso le corresponde a otro rol (práctica guiada). */
+function RelevoModal({ state, dispatch }: { state: SimState; dispatch: Dispatch<Action> }) {
+  const modal = state.modal!;
+  if (modal.kind !== 'relevo') return null;
+  return (
+    <ModalShell title="Este paso le corresponde a otro rol" onClose={() => dispatch({ type: 'CLOSE_MODAL' })}>
+      <p className="lead">{relevoText(modal.task, modal.role)} Usted actúa como <b>{roleLabel(state.role)}</b>.</p>
+      <p>En una escena real, cada quien cumple su función y entrega a la siguiente persona. Si hace el relevo, continuará como <b>{roleLabel(modal.role)}</b>; la bitácora registra qué rol hizo cada acción.</p>
+      <div className="modal-actions">
+        <button type="button" className="btn-outline" onClick={() => dispatch({ type: 'CLOSE_MODAL' })}>No, volver</button>
+        <button type="button" className="btn-primary" data-relevo-go onClick={() => {
+          dispatch({ type: 'CLOSE_MODAL' });
+          dispatch({ type: 'SET_ROLE', role: modal.role });
+          dispatch(modal.then);
+        }}>Hacer el relevo y continuar</button>
       </div>
     </ModalShell>
   );
@@ -382,8 +386,8 @@ export function Modals({ state, dispatch }: { state: SimState; dispatch: Dispatc
     case 'salvamento': return <SalvamentoModal dispatch={dispatch} />;
     case 'access': return <AccessModal state={state} dispatch={dispatch} />;
     case 'report': return <ReportModal state={state} dispatch={dispatch} />;
-    case 'teacher': return <TeacherModal state={state} dispatch={dispatch} />;
-    case 'manual': return <ManualModal dispatch={dispatch} />;
+    case 'relevo': return <RelevoModal state={state} dispatch={dispatch} />;
+    case 'manual': return <ManualModal state={state} dispatch={dispatch} />;
     default: return null;
   }
 }

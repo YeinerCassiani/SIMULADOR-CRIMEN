@@ -8,6 +8,8 @@ import { fmtClock } from './logic';
 export function LogDrawer({ state, open, onToggle }: { state: SimState; open: boolean; onToggle: () => void }) {
   const n = state.log.length;
   const last = state.log[0];
+  // En evaluación la bitácora (con puntos y aciertos) se ve recién en el informe final.
+  const hidden = state.practice.mode === 'evaluacion' && !state.finalized;
   return (
     <section className={`drawer${open ? ' is-open' : ''}`} aria-label="Bitácora">
       <button type="button" className="drawer-head" aria-expanded={open} aria-controls="log-body" onClick={onToggle}>
@@ -15,10 +17,11 @@ export function LogDrawer({ state, open, onToggle }: { state: SimState; open: bo
         <span className="num muted">{n} {n === 1 ? 'entrada' : 'entradas'}</span>
         {open ? <ChevronDown size={16} strokeWidth={1.5} aria-hidden="true" /> : <ChevronUp size={16} strokeWidth={1.5} aria-hidden="true" />}
       </button>
-      {!open && last && <p className={`drawer-last log-${last.type}`}>{last.message}</p>}
+      {!open && last && !hidden && <p className={`drawer-last log-${last.type}`}>{last.message}</p>}
       <div id="log-body" className="log" role="log" aria-live="polite" hidden={!open}>
-        {n === 0 && <p className="meta">Sin acciones todavía.</p>}
-        {state.log.map((l, i) => (
+        {hidden && <p className="meta">Modo evaluación: la bitácora con los puntos se muestra en el informe final.</p>}
+        {!hidden && n === 0 && <p className="meta">Sin acciones todavía.</p>}
+        {!hidden && state.log.map((l, i) => (
           <div key={n - i} className={`log-item log-${l.type}`}>
             <span className="log-time num">{fmtClock(l.time)}</span>
             <span className="log-msg">{l.message}</span>

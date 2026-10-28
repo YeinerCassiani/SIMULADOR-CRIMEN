@@ -24,7 +24,9 @@ export function ActionFeedback({ log, neutral = false }: { log: LogEntry[]; neut
   return (
     <div className="feedback" role="status" aria-live="polite">
       {neutral ? (
-        <p className="fb-item log-info"><Info size={18} strokeWidth={1.75} aria-hidden="true" /><span className="fb-msg">Acción registrada. El resultado se verá en el informe final.</span></p>
+        fresh.some((l) => l.competence === 'deny')
+          ? <p className="fb-item log-warn"><TriangleAlert size={18} strokeWidth={1.75} aria-hidden="true" /><span className="fb-msg">Acción no realizada: no corresponde a las funciones de su rol. Puede hacer el relevo en Ajustes.</span></p>
+          : <p className="fb-item log-info"><Info size={18} strokeWidth={1.75} aria-hidden="true" /><span className="fb-msg">Acción registrada. El resultado se verá en el informe final.</span></p>
       ) : (
         fresh.map((l, i) => {
           const Icon = ICON[l.type];

@@ -1,4 +1,5 @@
 import type { SimState } from './simulator';
+import { DEFAULT_PRACTICE } from './types';
 import { SCENARIOS } from './data/scenarios';
 
 const KEY = 'simulador-crimen-r3f-v5';
@@ -13,12 +14,16 @@ export function loadState(): SimState | null {
     if (!parsed.scenario || !Array.isArray(parsed.scenarios) || !parsed.witnesses) return null;
     // Refrescar los escenarios INTEGRADOS desde el código (no desde la caché), para
     // que los cambios de escenario surtan efecto sin depender del estado persistido.
-    // Se conservan los escenarios agregados por el docente (al final del array).
-    const teacher = parsed.scenarios.slice(SCENARIOS.length);
-    const scenarios = [...SCENARIOS, ...teacher];
+    // Se reemplazan por scenarioId: la lista de la práctica puede ser un subconjunto
+    // (casos ocultos por el docente) más casos propios del docente.
+    const builtin = new Map(SCENARIOS.map((s) => [s.scenarioId, s]));
+    const scenarios = parsed.scenarios.length ? parsed.scenarios.map((s) => builtin.get(s.scenarioId) ?? s) : [...SCENARIOS];
     const scenarioIndex = Math.min(Math.max(0, parsed.scenarioIndex ?? 0), scenarios.length - 1);
     const scenario = scenarios[scenarioIndex] ?? scenarios[0];
-    return { ...parsed, scenarios, scenarioIndex, scenario, modal: null };
+    // Prácticas guardadas antes del modo/cronómetro configurables: valores por defecto.
+    const practice = parsed.practice ?? DEFAULT_PRACTICE;
+    const started = parsed.started ?? parsed.log.length > 0;
+    return { ...parsed, scenarios, scenarioIndex, scenario, practice, started, modal: null };
   } catch {
     return null;
   }

@@ -171,6 +171,22 @@ export const SEARCH_METHODS = [
 
 export type LogType = 'info' | 'good' | 'bad' | 'warn';
 
+/**
+ * Cómo se juega la práctica (lo decide el docente):
+ * - guiada: siguiente paso sugerido, avisos antes de un error, relevo de rol ofrecido
+ *   y puntaje visible tras cada acción.
+ * - evaluacion: sin ayudas; el puntaje y la bitácora se ven en el informe final.
+ */
+export type PracticeMode = 'guiada' | 'evaluacion';
+
+export interface PracticeSettings {
+  mode: PracticeMode;
+  /** Segundos del cronómetro en lugares abiertos y vías; null lo desactiva. */
+  timerSeconds: number | null;
+}
+
+export const DEFAULT_PRACTICE: PracticeSettings = { mode: 'guiada', timerSeconds: 150 };
+
 export interface LogEntry {
   time: string;
   message: string;

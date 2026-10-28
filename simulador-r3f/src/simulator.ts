@@ -1,15 +1,14 @@
 import type {
   AccessRecord, CustodyRecord, EvidenceState, LabelRecord, LogEntry, LogType,
-  PackagingId, SalvamentoRecord, Scenario, ToolId, WitnessState,
+  PackagingId, PracticeSettings, SalvamentoRecord, Scenario, ToolId, WitnessState,
 } from './types';
+import { DEFAULT_PRACTICE } from './types';
 import { PACKAGING_LABELS } from './types';
 import { resolvePermission, roleLabel, DEFAULT_ROLE, type ActionKey } from './roles';
 import { scoreLabel, scoreCustody } from './validation';
 import { requiredSpecialist, roleIsSpecialist } from './specialists';
 import { normalize } from './util';
 import { SCENARIOS } from './data/scenarios';
-
-const OPEN_SCENE_SECONDS = 150;
 
 // --- Estado global del simulador (equivalente al objeto `app` del HTML original) ---
 
@@ -27,7 +26,8 @@ export type ModalState =
   | { kind: 'salvamento' }
   | { kind: 'access' }
   | { kind: 'report' }
-  | { kind: 'teacher' };
+  /** Acción que corresponde a otro rol: ofrece el relevo y, al aceptar, la ejecuta. */
+  | { kind: 'relevo'; role: string; task: string; then: Action };
 
 export interface Globals {
   epp: boolean; cordon: boolean; route: boolean;
@@ -54,6 +54,10 @@ export interface SimState {
   finalized: boolean;
   /** Segundos restantes en escena abierta; null si no aplica. */
   timeLeft: number | null;
+  /** Modo y cronómetro de la práctica (configuración del docente). */
+  practice: PracticeSettings;
+  /** La práctica se inició desde la pantalla de inicio (caso y rol elegidos). */
+  started: boolean;
 }
 
 function freshEvidenceState(): EvidenceState {
@@ -69,7 +73,7 @@ function freshGlobals(): Globals {
   return { epp: false, cordon: false, route: false, searchMethod: false, interview: false, reportInit: false, handover: false, salvamento: false };
 }
 
-export function initState(scenarios: Scenario[] = SCENARIOS, scenarioIndex = 0, role: string = DEFAULT_ROLE): SimState {
+export function initState(scenarios: Scenario[] = SCENARIOS, scenarioIndex = 0, role: string = DEFAULT_ROLE, practice: PracticeSettings = DEFAULT_PRACTICE): SimState {
   const scenario = scenarios[scenarioIndex];
   const evidence: Record<string, EvidenceState> = {};
   scenario.evidenceItems.forEach((e) => { evidence[e.id] = freshEvidenceState(); });
@@ -81,7 +85,8 @@ export function initState(scenarios: Scenario[] = SCENARIOS, scenarioIndex = 0, 
     selectedTool: null, selectedEvidenceId: null,
     evidence, witnesses, globals: freshGlobals(), records: [], salvamentoRecords: [], accessLog: [], log: [],
     modal: null, finalized: false,
-    timeLeft: scenario.environmentType !== 'cerrado' ? OPEN_SCENE_SECONDS : null,
+    timeLeft: scenario.environmentType !== 'cerrado' ? practice.timerSeconds : null,
+    practice, started: false,
   };
 }
 
@@ -141,6 +146,7 @@ export function riskOfTool(tool: ToolId, id: string, state: SimState): string[] 
 // --- Acciones del reducer ---
 
 export type Action =
+  | { type: 'START_PRACTICE'; index: number; role: string; practice: PracticeSettings; scenarios?: Scenario[] }
   | { type: 'LOAD_SCENARIO'; index: number }
   | { type: 'RESET' }
   | { type: 'SET_ROLE'; role: string }
@@ -148,7 +154,8 @@ export type Action =
   | { type: 'SELECT_TOOL'; tool: ToolId | null }
   | { type: 'SELECT_EVIDENCE'; id: string | null }
   | { type: 'APPLY_GLOBAL'; action: GlobalAction }
-  | { type: 'APPLY_TOOL'; id: string }
+  /** `tool` aplica esa herramienta directamente (acción por objeto); sin ella usa la seleccionada. */
+  | { type: 'APPLY_TOOL'; id: string; tool?: ToolId }
   | { type: 'SAVE_PACKAGE'; choice: PackagingId }
   | { type: 'SAVE_LABEL'; form: LabelRecord }
   | { type: 'SAVE_CUSTODY'; record: CustodyRecord }
@@ -160,8 +167,7 @@ export type Action =
   | { type: 'TICK' }
   | { type: 'OPEN_MODAL'; modal: ModalState }
   | { type: 'CLOSE_MODAL' }
-  | { type: 'FINALIZE' }
-  | { type: 'LOAD_TEACHER_JSON'; scenario: Scenario };
+  | { type: 'FINALIZE' };
 
 interface Mut { score: number; logs: LogEntry[]; }
 function award(mut: Mut, points: number, message: string, type?: LogType, competence?: 'deny' | 'conditional') {
@@ -203,11 +209,19 @@ export function reducer(state: SimState, action: Action): SimState {
   if (state.finalized && mutating.includes(action.type)) return state;
 
   switch (action.type) {
+    case 'START_PRACTICE': {
+      const scenarios = action.scenarios ?? state.scenarios;
+      const index = Math.min(Math.max(0, action.index), scenarios.length - 1);
+      const mut: Mut = { score: 0, logs: [] };
+      award(mut, 0, `Inicio de la práctica como ${roleLabel(action.role)} (${action.practice.mode === 'guiada' ? 'práctica guiada' : 'evaluación'}).`, 'info');
+      return commit({ ...initState(scenarios, index, action.role, action.practice), started: true }, mut, { modal: { kind: 'manual' } });
+    }
+
     case 'LOAD_SCENARIO':
-      return initState(state.scenarios, action.index, state.role);
+      return { ...initState(state.scenarios, action.index, state.role, state.practice), started: state.started };
 
     case 'RESET':
-      return initState(state.scenarios, state.scenarioIndex, state.role);
+      return { ...initState(state.scenarios, state.scenarioIndex, state.role, state.practice), started: state.started };
 
     case 'SET_ROLE': {
       if (action.role === state.role) return state;
@@ -242,11 +256,6 @@ export function reducer(state: SimState, action: Action): SimState {
       if (contaminated > 0) award(mut, 0, `Acta de cierre: ${contaminated} EMP/EF con alteración registrada.`, 'info');
       if (state.accessLog.length === 0) award(mut, -4, 'Cierre sin registro de ingreso/salida de personal (Sección 9, regla 3).', 'warn');
       return commit({ ...state, finalized: true }, mut, { modal: { kind: 'report' } });
-    }
-
-    case 'LOAD_TEACHER_JSON': {
-      const scenarios = [...state.scenarios, action.scenario];
-      return initState(scenarios, scenarios.length - 1, state.role);
     }
 
     case 'APPLY_GLOBAL': {
@@ -303,7 +312,7 @@ export function reducer(state: SimState, action: Action): SimState {
     }
 
     case 'APPLY_TOOL': {
-      const tool = state.selectedTool;
+      const tool = action.tool ?? state.selectedTool;
       const st = state.evidence[action.id];
       const item = state.scenario.evidenceItems.find((e) => e.id === action.id);
       if (!tool || !st || !item) return { ...state, selectedEvidenceId: action.id };

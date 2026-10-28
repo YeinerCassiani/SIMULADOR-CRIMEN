@@ -289,9 +289,13 @@ describe('fallo de la vista 3D', () => {
 describe('ganchos estables para la evaluación', () => {
   const read = (p: string) => readFileSync(join(SRC, p), 'utf8');
   it('conserva textos y data-eval que localizan los agentes', () => {
-    expect(read('ui/TopBar.tsx')).toMatch(/aria-label="Escenario"[\s\S]*data-eval="scenario"/);
+    expect(read('ui/TopBar.tsx')).toContain('data-home');
     expect(read('ui/TopBar.tsx')).toContain('data-eval="forensic-toggle"');
     expect(read('ui/TopBar.tsx')).toContain('>Luz forense<');
-    expect(read('ui/Modals.tsx')).toMatch(/data-eval="manual-close"[\s\S]{0,160}>Entendido, iniciar práctica</);
+    expect(read('ui/Modals.tsx')).toMatch(/data-eval="manual-close"[\s\S]{0,160}>Entendido, empezar</);
+    const start = read('ui/StartScreen.tsx');
+    for (const hook of ['data-start-screen', 'data-start-student', 'data-start-case=', 'data-start-next', 'data-start-go']) expect(start).toContain(hook);
+    expect(read('ui/PracticeAids.tsx')).toContain('className="cam-pad"');
+    expect(read('ui/PracticeAids.tsx')).toContain('data-next-step');
   });
 });

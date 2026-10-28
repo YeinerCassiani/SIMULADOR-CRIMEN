@@ -1,54 +1,46 @@
-import type { Dispatch } from 'react';
-import { ChevronDown, Flashlight, PanelRight, PanelRightClose, Scan, Timer } from 'lucide-react';
-import type { Action, SimState } from '../simulator';
+import { Flashlight, House, PanelRight, PanelRightClose, Timer, UserRound } from 'lucide-react';
+import type { SimState } from '../simulator';
 import { grade } from '../simulator';
-import { ROLE_DEFS } from '../roles';
+import { roleLabel } from '../roles';
 import { AMBIENTE_LABEL, fmtTime } from './logic';
+import { MODE_LABEL } from './startLogic';
 
 interface Props {
   state: SimState;
-  dispatch: Dispatch<Action>;
   forensicLight: boolean;
   onToggleForensic: () => void;
-  onOverview: () => void;
   inspectorOpen: boolean;
   onToggleInspector: () => void;
+  onHome: () => void;
+  onRole: () => void;
 }
 
-// Barra superior: caso (selector de escenario sobre el título), número de caso,
-// ambiente, rol, cronómetro, puntaje, nivel y controles de vista.
-export function TopBar({ state, dispatch, forensicLight, onToggleForensic, onOverview, inspectorOpen, onToggleInspector }: Props) {
+// Barra superior: inicio, caso, rol y modo, cronómetro, puntaje (solo en práctica
+// guiada) y controles de vista. El caso y el rol se eligen en la pantalla de inicio;
+// aquí solo se muestran (el rol se cambia con un relevo, desde Ajustes o el aviso).
+export function TopBar({ state, forensicLight, onToggleForensic, inspectorOpen, onToggleInspector, onHome, onRole }: Props) {
   const { scenario, timeLeft } = state;
   const low = timeLeft != null && timeLeft <= 30;
+  const guided = state.practice.mode === 'guiada';
   return (
     <header className="topbar">
+      <button type="button" className="btn-text home-btn" onClick={onHome} data-home>
+        <House size={18} strokeWidth={1.75} aria-hidden="true" /> <span className="home-label">Inicio</span>
+      </button>
       <div className="case">
-        <div className="case-switch">
-          <h1 className="case-title"><span className="case-title-text">{scenario.title}</span><ChevronDown size={16} strokeWidth={1.5} aria-hidden="true" /></h1>
-          <select
-            className="case-select"
-            aria-label="Escenario"
-            data-eval="scenario"
-            value={state.scenarioIndex}
-            onChange={(e) => dispatch({ type: 'LOAD_SCENARIO', index: Number(e.target.value) })}
-          >
-            {state.scenarios.map((s, i) => <option key={s.scenarioId + i} value={i}>{s.title}</option>)}
-          </select>
-        </div>
+        <h1 className="case-title"><span className="case-title-text">{scenario.title}</span></h1>
         <p className="case-meta">
-          <span className="num">NUNC {scenario.nunc}</span>
-          <span aria-hidden="true"> · </span>
           <span>{AMBIENTE_LABEL[scenario.environmentType] ?? scenario.environmentType}</span>
+          <span aria-hidden="true"> · </span>
+          <span>{MODE_LABEL[state.practice.mode]}</span>
         </p>
       </div>
 
       <div className="topbar-right">
-        <label className="role-field">
-          <span className="role-field-label">Rol</span>
-          <select id="roleSel" className="control" value={state.role} onChange={(e) => dispatch({ type: 'SET_ROLE', role: e.target.value })}>
-            {ROLE_DEFS.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
-          </select>
-        </label>
+        <button type="button" className="role-chip" onClick={onRole} aria-label={`Rol: ${roleLabel(state.role)}. Ver funciones o hacer relevo`}>
+          <UserRound size={16} strokeWidth={1.75} aria-hidden="true" />
+          <span className="role-chip-text"><span className="role-chip-label">Rol</span> {roleLabel(state.role)}</span>
+        </button>
 
         <dl className="figures">
           {timeLeft != null && (
@@ -57,14 +49,18 @@ export function TopBar({ state, dispatch, forensicLight, onToggleForensic, onOve
               <dd className="num">{fmtTime(timeLeft)}</dd>
             </div>
           )}
-          <div className="figure" aria-live="polite">
-            <dt>Puntaje</dt>
-            <dd className="num">{state.score}</dd>
-          </div>
-          <div className="figure">
-            <dt>Nivel</dt>
-            <dd>{grade(state.score)}</dd>
-          </div>
+          {guided && (
+            <>
+              <div className="figure" aria-live="polite">
+                <dt>Puntaje</dt>
+                <dd className="num">{state.score}</dd>
+              </div>
+              <div className="figure">
+                <dt>Nivel</dt>
+                <dd>{grade(state.score)}</dd>
+              </div>
+            </>
+          )}
         </dl>
 
         <div className="view-tools">
@@ -77,25 +73,21 @@ export function TopBar({ state, dispatch, forensicLight, onToggleForensic, onOve
           >
             <Flashlight size={16} strokeWidth={1.5} aria-hidden="true" />
             <span className="sel-line">Luz forense</span>
-            <kbd className="kbd" aria-hidden="true">L</kbd>
-          </button>
-          <button type="button" className="btn-icon" aria-label="Vista general (Esc)" data-tip="Vista general (Esc)" onClick={onOverview}>
-            <Scan size={18} strokeWidth={1.5} aria-hidden="true" />
           </button>
           <button
             type="button"
             className="btn-icon"
-            aria-label={inspectorOpen ? 'Ocultar inspector' : 'Mostrar inspector'}
+            aria-label={inspectorOpen ? 'Ocultar el panel del caso' : 'Mostrar el panel del caso'}
             aria-expanded={inspectorOpen}
             aria-controls="inspector"
-            data-tip={inspectorOpen ? 'Ocultar inspector' : 'Mostrar inspector'}
+            data-tip={inspectorOpen ? 'Ocultar el panel del caso' : 'Mostrar el panel del caso'}
             onClick={onToggleInspector}
           >
             {inspectorOpen ? <PanelRightClose size={18} strokeWidth={1.5} aria-hidden="true" /> : <PanelRight size={18} strokeWidth={1.5} aria-hidden="true" />}
           </button>
         </div>
       </div>
-      {timeLeft === 0 && <p className="topbar-alert" role="status">Tiempo agotado: riesgo de pérdida de EMP/EF no recolectados.</p>}
+      {timeLeft === 0 && <p className="topbar-alert" role="status">Tiempo agotado: los EMP/EF no recolectados se dan por perdidos.</p>}
     </header>
   );
 }
