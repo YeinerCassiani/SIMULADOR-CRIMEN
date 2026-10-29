@@ -211,11 +211,55 @@ await step('docente: editor de casos explica lo que falta', async () => {
   await shot('17-editor-faltantes');
 });
 
+let studentUrl = '';
+await step('docente: evaluación y enlace para estudiantes', async () => {
+  await click('.case-editor .start-back');
+  await click('[data-mode="evaluacion"]');
+  studentUrl = await page.$eval('.link-input', (el) => el.value);
+  if (!/#practica=/.test(studentUrl)) throw new Error('el enlace no trae la configuración');
+  await shot('18-docente-evaluacion');
+  await clickText(/Probar como estudiante/);
+});
+
+await step('evaluación: sin pistas ni puntaje, bloqueo explicado', async () => {
+  await click('[data-start-student]');
+  await click('[data-start-next]');
+  await click('[data-start-role="primer_responsable"]');
+  await click('[data-start-next]');
+  await expectText('.start-summary', /Evaluación/);
+  await click('[data-start-go]');
+  await click('[data-eval="manual-close"]');
+  await sleep(1500);
+  if (await page.$('[data-next-step]')) throw new Error('en evaluación aparece el siguiente paso');
+  if (/Puntaje/.test(await text('.topbar'))) throw new Error('en evaluación se ve el puntaje');
+  await click('.ev-row');
+  await click('[data-step="COLLECT"]');
+  if (await page.$('[data-relevo-go]')) throw new Error('en evaluación se ofreció el relevo');
+  await expectText('.feedback', /no corresponde a las funciones de su rol/);
+  await shot('19-evaluacion');
+});
+
+await step('enlace del docente en otro equipo', async () => {
+  const other = await browser.createBrowserContext();
+  const p2 = await other.newPage();
+  await p2.setViewport({ width: 1600, height: 900 });
+  p2.on('pageerror', (e) => errors.push(e.message));
+  const url = new URL(studentUrl);
+  url.search = '?nosplash';
+  await p2.goto(url.toString(), { waitUntil: 'load' });
+  await p2.waitForSelector('[data-start-student]', { timeout: 15000 });
+  const body = await p2.$eval('body', (b) => b.textContent);
+  if (!/preparó su docente/.test(body)) throw new Error('no indica que la práctica la preparó el docente');
+  if (await p2.$('[data-start-teacher]')) throw new Error('desde el enlace se ofrece el espacio docente');
+  await p2.screenshot({ path: path.join(outDir, '20-enlace-estudiante.png') });
+  await other.close();
+});
+
 await step('teléfono: inicio y práctica', async () => {
   await page.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
   await page.goto(args.url + '?nosplash', { waitUntil: 'load' });
   await page.waitForSelector('[data-start-student]', { timeout: 15000 });
-  await shot('18-movil-inicio');
+  await shot('21-movil-inicio');
   const wide = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   if (wide) throw new Error('hay desplazamiento horizontal en el inicio');
   await click('[data-start-student]');
@@ -224,7 +268,7 @@ await step('teléfono: inicio y práctica', async () => {
   await click('[data-start-go]');
   await click('[data-eval="manual-close"]');
   await sleep(2000);
-  await shot('19-movil-practica');
+  await shot('22-movil-practica');
   const overflow = await page.evaluate(() => [...document.querySelectorAll('.topbar *')]
     .filter((el) => el.getBoundingClientRect().right > window.innerWidth + 1).map((el) => el.className).slice(0, 5));
   if (overflow.length) throw new Error(`la barra superior se sale del ancho: ${overflow.join(', ')}`);

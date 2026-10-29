@@ -94,3 +94,18 @@ Metas `after`: canvas ≥ 70 %; desviación ≥ 59.33 / 54.80 / 58.05 / 57.21 (e
 | 3 | Vía pública | 52.74 | 59.86 | 57.21 | 100 | 42.0 (media) | 0 |
 
 La vivienda queda en 1.09× la base. La base era una escena diurna plana con muros blancos contra un cielo oscuro; la de ahora es nocturna y la domina un piso de baldosa de tono medio. Con más exposición o charcos más intensos la media sube, pero la desviación casi no se mueve: se ganaba menos de 1 punto por iteración y el charco de la colgante ya roza el blanco. Se dejó así para no quemar la imagen.
+
+## Resultado `after` tras el flujo de uso (2026-10-28)
+
+La interfaz cambió: no hay bandeja de herramientas, el riel mide 76 px y el panel 380 px. El área de escena libre (`freeSceneRect`) pasó de 1184×694 a 1144×796 y ahora incluye más piso oscuro al fondo, lo que baja la desviación medida. Además, la barra de siguiente paso, los botones de cámara y el aviso se ocultan antes de capturar.
+
+| # | Escenario | Desv. (recorte nuevo) | Desv. (mismo alto que antes, 691 px) | Meta | Nivel |
+|---|---|---|---|---|---|
+| 0 | Apartamento | 59.11 | 61.65 | 59.33 | media |
+| 1 | Parque | 52.89 | 55.68 | 54.80 | media |
+| 2 | Vivienda | 46.66 | 49.09 | 58.05 | media |
+| 3 | Vía | 59.96 | 60.48 | 57.21 | media |
+
+Con el mismo recorte que antes, apartamento, parque y vía pasan la meta: el render no empeoró, cambió el área medida. La vivienda sigue por debajo, igual que antes del cambio. 0 errores de consola y 0 canvas negros.
+
+Aviso: si durante la eval corren otros procesos pesados (tsc, vitest, build), el monitor de rendimiento baja la calidad a "baja" y el contraste cae. Hay que correrla con la máquina libre.

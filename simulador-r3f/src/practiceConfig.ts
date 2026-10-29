@@ -128,12 +128,32 @@ export function saveTeacher(t: TeacherStore): void {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(t)); } catch { /* almacenamiento no disponible */ }
 }
 
-/** Huella SHA-256 del PIN (no se guarda el PIN en claro). */
-export async function hashPin(pin: string): Promise<string> {
-  const data = new TextEncoder().encode(`simulador-crimen:${pin.trim()}`);
-  const digest = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+/**
+ * Huella del PIN (no se guarda el PIN en claro). SHA-256 cuando el navegador lo
+ * ofrece; en páginas sin HTTPS (p. ej. la red local del aula por http) no existe
+ * crypto.subtle y se usa FNV-1a de 64 bits. Ambas bastan para la protección "contra
+ * curiosidad" que da el PIN; la marca "fnv:" evita confundir una con otra.
+ */
+export async function hashPin(pin: string, subtle: SubtleCrypto | null = globalThis.crypto?.subtle ?? null): Promise<string> {
+  const text = `simulador-crimen:${pin.trim()}`;
+  if (subtle) {
+    const digest = await subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+  }
+  return `fnv:${fnv1a64(text)}`;
 }
+
+function fnv1a64(text: string): string {
+  let h = 0xcbf29ce484222325n;
+  for (const b of new TextEncoder().encode(text)) {
+    h ^= BigInt(b);
+    h = (h * 0x100000001b3n) & 0xffffffffffffffffn;
+  }
+  return h.toString(16).padStart(16, '0');
+}
+
+/** Largo a partir del cual algunos chats y aulas virtuales cortan los enlaces. */
+export const LINK_WARN_LENGTH = 2000;
 
 /** PIN válido: 4 a 8 dígitos. */
 export function validPin(pin: string): boolean {

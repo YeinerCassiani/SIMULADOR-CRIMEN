@@ -78,6 +78,14 @@ describe('configuración docente y enlace', () => {
     expect(h).not.toBe(await hashPin('2469'));
     expect(h).not.toContain('2468');
   });
+
+  it('PIN en páginas sin HTTPS (sin crypto.subtle): huella de respaldo estable', async () => {
+    const a = await hashPin('2468', null);
+    expect(a).toMatch(/^fnv:[0-9a-f]{16}$/);
+    expect(a).toBe(await hashPin(' 2468', null));
+    expect(a).not.toBe(await hashPin('2469', null));
+    expect(a).not.toBe(await hashPin('2468'));
+  });
 });
 
 describe('editor de casos', () => {

@@ -72,9 +72,9 @@ export default function App() {
 
   useEffect(() => { saveState(state); }, [state]);
 
-  // Reloj de la escena: solo corre con la práctica a la vista. TICK es no-op sin
-  // temporizador, con la práctica finalizada o con el tiempo en cero.
-  const practicing = stage === 'practica' && !splash;
+  // Reloj de la escena: solo corre con la práctica a la vista y no mientras se lee
+  // la ayuda. TICK es no-op sin temporizador, finalizada o con el tiempo en cero.
+  const practicing = stage === 'practica' && !splash && state.modal?.kind !== 'manual';
   useEffect(() => {
     if (!practicing) return;
     const id = setInterval(() => rawDispatch({ type: 'TICK' }), 1000);

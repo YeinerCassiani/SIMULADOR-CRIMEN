@@ -4,7 +4,7 @@ import type { PracticeMode, Scenario } from '../types';
 import { SCENARIOS } from '../data/scenarios';
 import { ROLE_DEFS, type RoleId } from '../roles';
 import {
-  TIMER_CHOICES, hashPin, loadTeacher, saveTeacher, studentLink, validPin,
+  LINK_WARN_LENGTH, TIMER_CHOICES, hashPin, loadTeacher, saveTeacher, studentLink, validPin,
   type TeacherConfig, type TeacherStore,
 } from '../practiceConfig';
 import { MODE_LABEL, modeDescription } from './startLogic';
@@ -203,6 +203,11 @@ function Settings({ config, onChange, onTry, onBack }: { config: TeacherConfig; 
             {copied ? <><Check size={16} aria-hidden="true" /> Copiado</> : <><Copy size={16} aria-hidden="true" /> Copiar enlace</>}
           </button>
         </div>
+        {link.length > LINK_WARN_LENGTH && (
+          <p className="form-error" role="status" data-link-long>
+            El enlace es largo ({link.length} caracteres) porque incluye {config.cases.length} {config.cases.length === 1 ? 'caso propio' : 'casos propios'}. Algunos chats o aulas virtuales lo cortan: si a los estudiantes no les abre, comparta menos casos por enlace o envíelo por correo.
+          </p>
+        )}
       </Block>
 
       <div className="start-actions">

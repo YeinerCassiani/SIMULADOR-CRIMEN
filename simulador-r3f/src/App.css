@@ -607,7 +607,7 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 .start-inner { width: min(980px, calc(100vw - 32px)); margin: 0 auto; padding: 48px 0 64px; }
 .start-brand { display: flex; align-items: center; gap: 24px; margin-bottom: 36px; }
 .start-brand .splash-logo { flex: none; margin: 0; }
-.start-title { font-size: clamp(26px, 4vw, 36px); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+.start-title { font-size: clamp(24px, 3vw, 30px); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
 .start-lead { font-size: 17px; line-height: 1.5; margin: 8px 0 0; max-width: 70ch; }
 .start-h1 { font-size: clamp(24px, 3.4vw, 30px); font-weight: 800; letter-spacing: -0.01em; margin: 0 0 8px; }
 .start-h2 { font-size: 19px; font-weight: 700; margin: 0 0 12px; }
